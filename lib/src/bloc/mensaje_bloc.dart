@@ -4,7 +4,6 @@ import 'package:formvalidation/src/models/mensaje_model.dart';
 import 'package:formvalidation/src/providers/mensajes_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:formvalidation/src/models/producto_model.dart';
 
 
 
@@ -22,9 +21,9 @@ class MensajesBloc {
 
 
 
-  void cargarProductos() async {
+  void cargarMensajes() async {
 
-    final mensajes = await _mensajesProvider.cargarProductos();
+    final mensajes = await _mensajesProvider.cargarMimuro();
     _mensajesController.sink.add( mensajes );
   }
 
@@ -32,7 +31,7 @@ class MensajesBloc {
   void agregarProducto( MensajeModel mensaje ) async {
 
     _cargandoController.sink.add(true);
-    await _mensajesProvider.crearProducto(mensaje);
+    await _mensajesProvider.crearMensaje(mensaje);
     _cargandoController.sink.add(false);
 
   }
@@ -48,17 +47,17 @@ class MensajesBloc {
   }
 
 
-   void editarProducto( ProductoModel producto ) async {
+   void editarProducto( MensajeModel mensaje ) async {
 
     _cargandoController.sink.add(true);
-    await _mensajesProvider.editarProducto(producto);
+    await _mensajesProvider.editarMensaje(mensaje);
     _cargandoController.sink.add(false);
 
   }
 
   void borrarProducto( String id ) async {
 
-    await _mensajesProvider.borrarProducto(id);
+    await _mensajesProvider.borrarMensaje(id);
 
   }
 

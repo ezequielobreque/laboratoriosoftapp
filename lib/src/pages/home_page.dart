@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_networkimage/provider.dart';
+import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
-import 'package:formvalidation/src/models/producto_model.dart';
+import 'package:formvalidation/src/models/mensaje_model.dart';
 
 class HomePage extends StatelessWidget {
   
@@ -8,24 +10,24 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final productosBloc = Provider.productosBloc(context);
-    productosBloc.cargarProductos();
+    final mensajesBloc = Provider.mensajesBloc(context);
+    mensajesBloc.cargarMensajes();
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Home')
       ),
-      body: _crearListado(productosBloc),
+      body: _crearListado(mensajesBloc),
       floatingActionButton: _crearBoton( context ),
     );
   }
 
 
-  Widget _crearListado(ProductosBloc productosBloc ) {
+  Widget _crearListado(MensajesBloc mensajesBloc ) {
 
     return StreamBuilder(
-      stream: productosBloc.productosStream,
-      builder: (BuildContext context, AsyncSnapshot<List<ProductoModel>> snapshot){
+      stream: mensajesBloc.productosStream,
+      builder: (BuildContext context, AsyncSnapshot<List<MensajeModel>> snapshot){
         
         if ( snapshot.hasData ) {
 
@@ -33,7 +35,7 @@ class HomePage extends StatelessWidget {
 
           return ListView.builder(
             itemCount: productos.length,
-            itemBuilder: (context, i) => _crearItem(context, productosBloc, productos[i] ),
+            itemBuilder: (context, i) => _crearItem(context, mensajesBloc, productos[i] ),
           );
 
         } else {
@@ -44,31 +46,35 @@ class HomePage extends StatelessWidget {
 
   }
 
-  Widget _crearItem(BuildContext context, ProductosBloc productosBloc, ProductoModel producto ) {
+  Widget _crearItem(BuildContext context, MensajesBloc productosBloc, MensajeModel producto ) {
 
     return Dismissible(
       key: UniqueKey(),
       background: Container(
         color: Colors.red,
       ),
-      onDismissed: ( direccion )=> productosBloc.borrarProducto(producto.id),
+     /* onDismissed: ( direccion )=> productosBloc.borrarProducto(producto.id),*/
       child: Card(
         child: Column(
           children: <Widget>[
-
-            ( producto.fotoUrl == null ) 
+           
+            ( producto.imageName == null ) 
               ? Image(image: AssetImage('assets/no-image.png'))
               : FadeInImage(
-                image: NetworkImage( producto.fotoUrl ),
-                placeholder: AssetImage('assets/jar-loading.gif'),
+                image: AdvancedNetworkImage( producto.imageName,
+                      
+                        useDiskCache: true,
+                        cacheRule: CacheRule(maxAge: const Duration(days: 7)),
+                        ) ,
+                placeholder:AssetImage(  'assets/jar-loading.gif'),
                 height: 300.0,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
             
             ListTile(
-              title: Text('${ producto.titulo } - ${ producto.valor }'),
-              subtitle: Text( producto.id ),
+              title: Text('${ producto.user.username }'),
+              subtitle: Text( producto.informacion ),
               onTap: () => Navigator.pushNamed(context, 'producto', arguments: producto ),
             ),
 

@@ -29,6 +29,7 @@ dependencies:
   mime_type:
   shared_preferences:
   font_awesome_flutter: ^8.5.0
+  flutter_advanced_networkimage: ^0.7.0
 
 dev_dependencies:
   flutter_test:

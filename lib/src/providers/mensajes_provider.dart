@@ -13,14 +13,14 @@ import 'package:formvalidation/src/models/producto_model.dart';
 
 class MensajesProvider {
 
-  final String _url = 'https://flutter-varios.firebaseio.com';
+  final String _url = 'http://10.0.2.2:8000/api/sec';
   final _prefs = new PreferenciasUsuario();
 
-  Future<bool> crearProducto( ProductoModel producto ) async {
+  Future<bool> crearMensaje( MensajeModel mensaje ) async {
     
     final url = '$_url/productos.json?auth=${ _prefs.token }';
 
-    final resp = await http.post( url, body: productoModelToJson(producto) );
+    final resp = await http.post( url, body: mensajeModelToJson(mensaje) );
 
     final decodedData = json.decode(resp.body);
 
@@ -30,11 +30,11 @@ class MensajesProvider {
 
   }
 
-  Future<bool> editarProducto( ProductoModel producto ) async {
+  Future<bool> editarMensaje( MensajeModel mensaje ) async {
     
-    final url = '$_url/productos/${ producto.id }.json?auth=${ _prefs.token }';
+    final url = '$_url/productos/${ mensaje.id }.json?auth=${ _prefs.token }';
 
-    final resp = await http.put( url, body: productoModelToJson(producto) );
+    final resp = await http.put( url, body: mensajeModelToJson(mensaje) );
 
     final decodedData = json.decode(resp.body);
 
@@ -46,7 +46,7 @@ class MensajesProvider {
 
 
 
-  Future<List<MensajeModel>> cargarProductos() async {
+  /*Future<List<MensajeModel>> cargarMensajes() async {
 
     final url  = '$_url/productos.json?auth=${ _prefs.token }';
     final resp = await http.get(url);
@@ -73,10 +73,40 @@ class MensajesProvider {
 
     return productos;
 
+  }*/
+
+    Future<List<MensajeModel>> cargarMimuro() async {
+
+    final url  = '$_url/mimuro?access_token=${ _prefs.token }';
+    final resp = await http.get(url);
+
+    final List<dynamic> decodedData = json.decode(resp.body);
+    final List<MensajeModel> mensajes = new List();
+
+
+    if ( decodedData == null ) return [];
+    
+
+
+    decodedData.forEach( (mens){
+
+      final prodTemp = MensajeModel.fromJson(mens);
+      
+      print(prodTemp.imageName);
+      
+      print(prodTemp.id);
+      mensajes.add( prodTemp );
+
+    });
+
+    // print( productos[0].id );
+
+    return mensajes;
+
   }
 
 
-  Future<int> borrarProducto( String id ) async { 
+  Future<int> borrarMensaje( String id ) async { 
 
     final url  = '$_url/productos/$id.json?auth=${ _prefs.token }';
     final resp = await http.delete(url);
