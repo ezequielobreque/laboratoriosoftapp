@@ -10,6 +10,10 @@ bool isNumeric( String s ) {
 
 }
 
+String url= 'http://192.168.100.104:8000';
+
+
+
 
 void mostrarAlerta(BuildContext context, String mensaje ) {
  

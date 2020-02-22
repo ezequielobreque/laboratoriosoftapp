@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:formvalidation/src/preferencias_usuario/preferencias_usuario.dart';
 import 'package:http/http.dart' as http;
 
+import '../utils/utils.dart' as utils;
+
 class UsuarioProvider {
 
   
@@ -35,9 +37,9 @@ class UsuarioProvider {
 
     
 
-
+    print(utils.url);
     final resp = await http.post(
-      'http://10.0.2.2:8000/oauth/v2/token',
+      '${utils.url}/oauth/v2/token',
       body: _bodyToken
     );
     
@@ -66,7 +68,8 @@ class UsuarioProvider {
     };
 
     final resp = await http.post(
-      'http://10.0.2.2:8000/api/signup',
+      
+      '${utils.url}/api/signup',
       headers: {"Content-Type": "application/json"},
       body: json.encode(informacion)
     );

@@ -7,6 +7,8 @@ import 'package:formvalidation/src/pages/login_page.dart';
 import 'package:formvalidation/src/pages/producto_page.dart';
 import 'package:formvalidation/src/pages/registro_page.dart';
 import 'package:formvalidation/src/preferencias_usuario/preferencias_usuario.dart';
+
+import 'src/utils/utils.dart';
  
 void main() async {
   
@@ -21,14 +23,16 @@ void main() async {
 }
  
 class MyApp extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
-    
+  
     final prefs = new PreferenciasUsuario();
     print( prefs.token );
     
     return Provider(
       child: MaterialApp(
+        
         debugShowCheckedModeBanner: false,
         title: 'Material App',
         initialRoute: 'login',

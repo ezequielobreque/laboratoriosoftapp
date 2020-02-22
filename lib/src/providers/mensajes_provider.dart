@@ -11,9 +11,11 @@ import 'package:mime_type/mime_type.dart';
 
 import 'package:formvalidation/src/models/producto_model.dart';
 
+import '../utils/utils.dart' as utils;
+
 class MensajesProvider {
 
-  final String _url = 'http://10.0.2.2:8000/api/sec';
+  final String _url = '${utils.url}/api/sec';
   final _prefs = new PreferenciasUsuario();
 
   Future<bool> crearMensaje( MensajeModel mensaje ) async {

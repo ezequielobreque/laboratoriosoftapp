@@ -6,6 +6,8 @@ import 'dart:convert';
 
 import 'package:formvalidation/src/models/user_model.dart';
 
+import '../utils/utils.dart' as utils;
+
 MensajeModel mensajeModelFromJson(String str) => MensajeModel.fromJson(json.decode(str));
 
 String mensajeModelToJson(MensajeModel data) => json.encode(data.toJson());
@@ -31,7 +33,8 @@ class MensajeModel {
         user: UserModel.fromJson(json["user"]),
         informacion: json["informacion"],
         fechaHora: DateTime.parse(json["fecha_hora"]),
-        imageName:(json["image_name"]==null)? null : "http://10.0.2.2:8000/imagenes/mensaje/"+json["image_name"]
+        
+        imageName:(json["image_name"]==null)? null : "${utils.url}/imagenes/mensaje/"+json["image_name"]
         
     );
 
