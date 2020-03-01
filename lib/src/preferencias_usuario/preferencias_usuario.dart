@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:formvalidation/src/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /*
@@ -22,6 +25,8 @@ class PreferenciasUsuario {
 
   SharedPreferences _prefs;
 
+  UserModel _user;
+
   initPrefs() async {
     this._prefs = await SharedPreferences.getInstance();
   }
@@ -44,6 +49,16 @@ class PreferenciasUsuario {
   set ultimaPagina( String value ) {
     _prefs.setString('ultimaPagina', value);
   }
+
+  set usuarioApp(dynamic value){
+    
+    _prefs.setString('usuario',json.encode(value));
+  }
+  get usuarioApp{
+    return _prefs.getString('usuario') ?? null;
+  }
+
+ 
 
 }
 

@@ -1,39 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_networkimage/provider.dart';
+import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
-import 'package:formvalidation/src/models/producto_model.dart';
+import 'package:formvalidation/src/models/mensaje_model.dart';
+import 'package:formvalidation/src/preferencias_usuario/usuario.dart';
+import 'package:formvalidation/src/utils/utils.dart' as utils;
 
-class HomePage extends StatelessWidget {
+class MiPerfilPage extends StatelessWidget {
   
   
   @override
   Widget build(BuildContext context) {
-
-    final productosBloc = Provider.productosBloc(context);
-    productosBloc.cargarProductos();
+    
+    final mensajesBloc = Provider.mensajesBloc(context);
+    mensajesBloc.cargarMisMensajes();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home')
-      ),
-      body: _crearListado(productosBloc),
+      
+      
+      body:Stack(children: <Widget>[utils.crearFondo(context,null),_crearListado(mensajesBloc)]),
       floatingActionButton: _crearBoton( context ),
     );
   }
 
 
-  Widget _crearListado(ProductosBloc productosBloc ) {
-
+  Widget _crearListado(MensajesBloc mensajesBloc ) {
+    
     return StreamBuilder(
-      stream: productosBloc.productosStream,
-      builder: (BuildContext context, AsyncSnapshot<List<ProductoModel>> snapshot){
+      stream: mensajesBloc.productosStream,
+      builder: (BuildContext context, AsyncSnapshot<List<MensajeModel>> snapshot){
+        
         
         if ( snapshot.hasData ) {
 
           final productos = snapshot.data;
 
           return ListView.builder(
+            
             itemCount: productos.length,
-            itemBuilder: (context, i) => _crearItem(context, productosBloc, productos[i] ),
+            itemBuilder: (context, i) => _crearItem(context, mensajesBloc, productos[i] ),
           );
 
         } else {
@@ -44,38 +49,68 @@ class HomePage extends StatelessWidget {
 
   }
 
-  Widget _crearItem(BuildContext context, ProductosBloc productosBloc, ProductoModel producto ) {
-
-    return Dismissible(
+  Widget _crearItem(BuildContext context, MensajesBloc productosBloc, MensajeModel mensaje ) {
+    
+    return Container(
+            margin: EdgeInsets.symmetric(horizontal: 10.0,vertical: 10.0),
+            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0 ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 3.0,
+                  offset: Offset(0.0, 5.0),
+                  spreadRadius: 3.0
+                )
+              ]
+            ),
       key: UniqueKey(),
-      background: Container(
-        color: Colors.red,
-      ),
-      onDismissed: ( direccion )=> productosBloc.borrarProducto(producto.id),
-      child: Card(
+      
+     /* onDismissed: ( direccion )=> productosBloc.borrarProducto(producto.id),*/
+      
+        
         child: Column(
+          
           children: <Widget>[
-
-            ( producto.fotoUrl == null ) 
-              ? Image(image: AssetImage('assets/no-image.png'))
+           ListTile(
+              title:Row(children: <Widget>[
+               CircleAvatar(
+            child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                 child: Image(image:(userApp().imageName!=null)? NetworkImage("${utils.url}/imagenes/user/"+userApp().imageName)
+                 :AssetImage('assets/perfil-no-image.jpg'),
+                 )
+                 ),
+            ),
+               
+              Text('  ${ mensaje.user.username }',style: TextStyle(fontSize: 23.0))
+              ]
+              ),
+              subtitle: Text( mensaje.informacion,style: TextStyle(fontSize: 17.0), ),
+              onTap: () => Navigator.pushNamed(context, 'mensaje', arguments: mensaje ),
+            ),
+            ( mensaje.imageName == null ) 
+              ? Container(height:20 )
               : FadeInImage(
-                image: NetworkImage( producto.fotoUrl ),
-                placeholder: AssetImage('assets/jar-loading.gif'),
+                image: AdvancedNetworkImage( "${utils.url}/imagenes/mensaje/"+mensaje.imageName,
+                      
+                        useDiskCache: true,
+                        cacheRule: CacheRule(maxAge: const Duration(days: 7)),
+                        ) ,
+                placeholder:AssetImage(  'assets/jar-loading.gif'),
                 height: 300.0,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
             
-            ListTile(
-              title: Text('${ producto.titulo } - ${ producto.valor }'),
-              subtitle: Text( producto.id ),
-              onTap: () => Navigator.pushNamed(context, 'producto', arguments: producto ),
-            ),
+            
 
           ],
         ),
-      )
-    );
+      );
+    
 
 
     
@@ -87,7 +122,7 @@ class HomePage extends StatelessWidget {
     return FloatingActionButton(
       child: Icon( Icons.add ),
       backgroundColor: Colors.deepPurple,
-      onPressed: ()=> Navigator.pushNamed(context, 'producto'),
+      onPressed: ()=> Navigator.pushNamed(context, 'mensaje'),
     );
   }
 

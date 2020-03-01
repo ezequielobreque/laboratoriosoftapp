@@ -27,11 +27,17 @@ class MensajesBloc {
     _mensajesController.sink.add( mensajes );
   }
 
+   void cargarMisMensajes() async {
 
-  void agregarProducto( MensajeModel mensaje ) async {
+    final mensajes = await _mensajesProvider.cargarMisMensajes();
+    _mensajesController.sink.add( mensajes );
+  }
+
+
+  void crearMensaje( MensajeModel mensaje ,File file) async {
 
     _cargandoController.sink.add(true);
-    await _mensajesProvider.crearMensaje(mensaje);
+    await _mensajesProvider.crearMensaje(mensaje,file);
     _cargandoController.sink.add(false);
 
   }
@@ -47,7 +53,7 @@ class MensajesBloc {
   }
 
 
-   void editarProducto( MensajeModel mensaje ) async {
+   void editarMensaje( MensajeModel mensaje ) async {
 
     _cargandoController.sink.add(true);
     await _mensajesProvider.editarMensaje(mensaje);

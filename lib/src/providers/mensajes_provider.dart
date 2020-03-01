@@ -18,11 +18,16 @@ class MensajesProvider {
   final String _url = '${utils.url}/api/sec';
   final _prefs = new PreferenciasUsuario();
 
-  Future<bool> crearMensaje( MensajeModel mensaje ) async {
+  Future<bool> crearMensaje( MensajeModel mensaje, File imagen) async {
     
-    final url = '$_url/productos.json?auth=${ _prefs.token }';
+    final url = '$_url/crearmensaje?access_token=${_prefs.token}';
 
-    final resp = await http.post( url, body: mensajeModelToJson(mensaje) );
+     var _bodyToken = new Map<String, dynamic>();
+    _bodyToken['informacion'] = mensaje.informacion;
+    _bodyToken['imageFile'] =imagen;
+   
+
+    final resp = await http.post(url,body: _bodyToken );
 
     final decodedData = json.decode(resp.body);
 
@@ -34,7 +39,9 @@ class MensajesProvider {
 
   Future<bool> editarMensaje( MensajeModel mensaje ) async {
     
-    final url = '$_url/productos/${ mensaje.id }.json?auth=${ _prefs.token }';
+    final url = '$_url/editarmensaje/${mensaje.id}?access_token=${_prefs.token}';
+
+    print(mensajeModelToJson(mensaje));
 
     final resp = await http.put( url, body: mensajeModelToJson(mensaje) );
 
@@ -43,6 +50,8 @@ class MensajesProvider {
     print( decodedData );
 
     return true;
+
+  
 
   }
 
@@ -80,6 +89,37 @@ class MensajesProvider {
     Future<List<MensajeModel>> cargarMimuro() async {
 
     final url  = '$_url/mimuro?access_token=${ _prefs.token }';
+    final resp = await http.get(url);
+
+    final List<dynamic> decodedData = json.decode(resp.body);
+    final List<MensajeModel> mensajes = new List();
+
+
+    if ( decodedData == null ) return [];
+    
+
+
+    decodedData.forEach( (mens){
+
+      final prodTemp = MensajeModel.fromJson(mens);
+      
+      print(prodTemp.imageName);
+      
+      print(prodTemp.id);
+      mensajes.add( prodTemp );
+
+    });
+
+    // print( productos[0].id );
+
+    return mensajes;
+
+  }
+  
+
+    Future<List<MensajeModel>> cargarMisMensajes() async {
+
+    final url  = '$_url/mismensajes?access_token=${ _prefs.token }';
     final resp = await http.get(url);
 
     final List<dynamic> decodedData = json.decode(resp.body);

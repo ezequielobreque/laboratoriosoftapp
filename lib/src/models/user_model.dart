@@ -3,6 +3,7 @@
 //     final client = clientFromJson(jsonString);
 
 import 'dart:convert';
+import '../utils/utils.dart' as utils;
 
 UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 
@@ -26,7 +27,7 @@ class UserModel {
         id: json["id"],
         username: json["username"],
         email: json["email"],
-        imageName: json["image_name"],
+        imageName: (json["image_name"]==null)? null : json["image_name"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -35,4 +36,5 @@ class UserModel {
         "email": email,
         "image_name": imageName,
     };
+
 }

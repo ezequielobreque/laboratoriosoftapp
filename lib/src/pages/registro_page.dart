@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/providers/usuario_provider.dart';
-import 'package:formvalidation/src/utils/utils.dart';
+import 'package:formvalidation/src/utils/utils.dart' as utils;
 
 class RegistroPage extends StatefulWidget {
 
@@ -18,7 +18,7 @@ class _RegistroPageState extends State<RegistroPage> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          _crearFondo( context ),
+          utils.crearFondo( context,null),
           _loginForm( context ),
         ],
       )
@@ -178,7 +178,7 @@ class _RegistroPageState extends State<RegistroPage> {
     if ( info['ok'] ) {
        Navigator.pushReplacementNamed(context, 'home');
     } else {
-      mostrarAlerta( context, info['mensaje'] );
+      utils.mostrarAlerta( context, info['mensaje'] );
     }
 
 

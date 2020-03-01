@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:formvalidation/src/models/user_model.dart';
 import 'package:formvalidation/src/preferencias_usuario/preferencias_usuario.dart';
 import 'package:http/http.dart' as http;
 
@@ -50,7 +51,14 @@ class UsuarioProvider {
     if ( decodedResp.containsKey('access_token') ) {
       
       _prefs.token = decodedResp['access_token'];
-
+       final resp = await http.post(
+      '${utils.url}/api/sec/usuario?access_token=${_prefs.token}');
+      final dynamic decodedData = json.decode(resp.body);
+      
+      if( decodedData!= null){
+      
+      _prefs.usuarioApp=decodedData['user'];
+      }
       return { 'ok': true, 'token': decodedResp['access_token'] };
     } else {
       return { 'ok': false, 'mensaje': decodedResp['error_description'] };

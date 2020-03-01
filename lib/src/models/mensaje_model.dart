@@ -34,12 +34,12 @@ class MensajeModel {
         informacion: json["informacion"],
         fechaHora: DateTime.parse(json["fecha_hora"]),
         
-        imageName:(json["image_name"]==null)? null : "${utils.url}/imagenes/mensaje/"+json["image_name"]
+        imageName:(json["image_name"]==null)? null : json["image_name"]
         
     );
 
     Map<String, dynamic> toJson() => {
-        "id" : user.toJson(),
+        "id" : id,
         "user": user.toJson(),
         "informacion": informacion,
         "imageName" :imageName,

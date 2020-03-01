@@ -1,45 +1,47 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
+import 'package:formvalidation/src/models/mensaje_model.dart';
+import 'package:formvalidation/src/preferencias_usuario/usuario.dart';
 import 'package:image_picker/image_picker.dart';
 
-
-import 'package:formvalidation/src/models/producto_model.dart';
 import 'package:formvalidation/src/utils/utils.dart' as utils;
 
 
-class ProductoPage extends StatefulWidget {
+
+class MensajePage extends StatefulWidget {
 
   @override
-  _ProductoPageState createState() => _ProductoPageState();
+  _MensajePageState createState() => _MensajePageState();
 }
 
-class _ProductoPageState extends State<ProductoPage> {
+class _MensajePageState extends State<MensajePage> {
   
   final formKey     = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   
-  ProductosBloc productosBloc;
-  ProductoModel producto = new ProductoModel();
+  MensajesBloc mensajesBloc;
+  MensajeModel mensaje = new MensajeModel();
   bool _guardando = false;
   File foto;
-
+  var _user=userApp();
   @override
   Widget build(BuildContext context) {
 
-    productosBloc = Provider.productosBloc(context);
+    mensajesBloc = Provider.mensajesBloc(context);
 
 
-    final ProductoModel prodData = ModalRoute.of(context).settings.arguments;
+    final MensajeModel prodData = ModalRoute.of(context).settings.arguments;
     if ( prodData != null ) {
-      producto = prodData;
+      mensaje = prodData;
     }
     
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: Text('Producto'),
+        title: Text('Mensaje'),
         actions: <Widget>[
           IconButton(
             icon: Icon( Icons.photo_size_select_actual ),
@@ -51,55 +53,155 @@ class _ProductoPageState extends State<ProductoPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: Stack(
+
+       children:<Widget>[ 
+        utils.crearFondo(context,null),
+        _container(context)
+      
+      
+      ]),
+      /*body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15.0),
           child: Form(
             key: formKey,
             child: Column(
               children: <Widget>[
+                _mostrarNombre(),
                 _mostrarFoto(),
-                _crearNombre(),
-                _crearPrecio(),
-                _crearDisponible(),
+                //_crearNombre(),
+                //_crearPrecio(),
+                //_crearDisponible(),
                 _crearBoton()
               ],
             ),
           ),
         ),
+      ),*/
+    );
+
+  }
+
+  Widget _container(BuildContext context) {
+    
+    final size = MediaQuery.of(context).size;
+    return SingleChildScrollView(
+      
+      child: Form(
+        key: formKey,
+        child: Column(
+        children: <Widget>[
+
+          SafeArea(
+            child: Container(
+              height: 10.0,
+            ),
+          ),
+
+          Container(
+            width: size.width * 0.97,
+            margin: EdgeInsets.symmetric(vertical: 5.0),
+            padding: EdgeInsets.symmetric( vertical: 10.0 ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 3.0,
+                  offset: Offset(0.0, 5.0),
+                  spreadRadius: 3.0
+                )
+              ]
+            ),
+            child: Column(
+              children: <Widget>[
+                _mostrarNombre(),
+                _crearInformacion(),
+                _mostrarFoto(),
+                _crearBoton()
+              ],
+            ),
+          ),
+          SizedBox( height: 0.0 )
+        ],
+      ),
+    ));
+
+
+  }
+
+
+  Widget _mostrarNombre(){
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.0),
+      child: Row(
+      
+      children: <Widget>[
+      CircleAvatar(
+        
+        
+        child: ClipRRect(
+          
+          borderRadius: BorderRadius.circular(20.0),
+          child: Image(image: NetworkImage("${utils.url}/imagenes/user/"+userApp().imageName),
+        
+        
+        )
+        
+        ),
+  
+      ),
+      Text('  '+_user.username[0].toUpperCase()+_user.username.substring(1),style: TextStyle(
+      fontSize: 20.0
+      ),
+      ),
+  
+      ],
+
+      ),
+    );
+    
+
+  }
+
+  Widget _crearInformacion() {
+
+
+      
+    return Container(
+      padding:  EdgeInsets.symmetric(horizontal: 20.0),
+          child: TextFormField(
+            
+        initialValue: mensaje.informacion,
+        textCapitalization: TextCapitalization.sentences,
+        decoration: InputDecoration(
+         
+          border:OutlineInputBorder(),
+          hintText: '¿En que estas pensando?',
+            ),
+        onSaved: (value) => mensaje.informacion= value,
+        validator: (value) {
+          if ( value.length < 3 ) {
+            return 'Ingrese el nombre del Mensaje';
+          } else {
+            return null;
+          }
+        },
       ),
     );
 
   }
 
-  Widget _crearNombre() {
-
+  /*Widget _crearPrecio() {
     return TextFormField(
-      initialValue: producto.titulo,
-      textCapitalization: TextCapitalization.sentences,
-      decoration: InputDecoration(
-        labelText: 'Producto'
-      ),
-      onSaved: (value) => producto.titulo = value,
-      validator: (value) {
-        if ( value.length < 3 ) {
-          return 'Ingrese el nombre del producto';
-        } else {
-          return null;
-        }
-      },
-    );
-
-  }
-
-  Widget _crearPrecio() {
-    return TextFormField(
-      initialValue: producto.valor.toString(),
+      initialValue: mensaje.toString(),
       keyboardType: TextInputType.numberWithOptions(decimal: true),
       decoration: InputDecoration(
         labelText: 'Precio'
       ),
-      onSaved: (value) => producto.valor = double.parse(value),
+      onSaved: (value) => mensaje.valor = double.parse(value),
       validator: (value) {
 
         if ( utils.isNumeric(value)  ) {
@@ -110,20 +212,20 @@ class _ProductoPageState extends State<ProductoPage> {
 
       },
     );
-  }
+  }*/
 
-  Widget _crearDisponible() {
+ /* Widget _crearDisponible() {
 
     return SwitchListTile(
-      value: producto.disponible,
+      value: mensaje.disponible,
       title: Text('Disponible'),
       activeColor: Colors.deepPurple,
       onChanged: (value)=> setState((){
-        producto.disponible = value;
+        mensaje.disponible = value;
       }),
     );
 
-  }
+  }*/
 
 
 
@@ -150,16 +252,13 @@ class _ProductoPageState extends State<ProductoPage> {
 
     setState(() {_guardando = true; });
 
-    if ( foto != null ) {
-      producto.fotoUrl = await productosBloc.subirFoto(foto);
-    }
 
 
 
-    if ( producto.id == null ) {
-      productosBloc.agregarProducto(producto);
+    if ( mensaje.id == null ) {
+      mensajesBloc.crearMensaje(mensaje,foto);
     } else {
-      productosBloc.editarProducto(producto);
+      mensajesBloc.editarMensaje(mensaje);
     }
 
 
@@ -185,12 +284,14 @@ class _ProductoPageState extends State<ProductoPage> {
 
   Widget _mostrarFoto() {
 
-    if ( producto.fotoUrl != null ) {
+    if ( mensaje.imageName != null ) {
       
       return FadeInImage(
-        image: NetworkImage( producto.fotoUrl ),
+        image: NetworkImage( "${utils.url}/imagenes/mensaje/"+mensaje.imageName ),
         placeholder: AssetImage('assets/jar-loading.gif'),
-        height: 300.0,
+        width: double.infinity,
+        
+        
         fit: BoxFit.contain,
       );
 
@@ -199,6 +300,7 @@ class _ProductoPageState extends State<ProductoPage> {
       return Image(
 
         image: AssetImage( foto?.path ?? 'assets/no-image.png'),
+        
         height: 300.0,
         fit: BoxFit.cover,
 
@@ -229,7 +331,7 @@ class _ProductoPageState extends State<ProductoPage> {
     );
 
     if ( foto != null ) {
-      producto.fotoUrl = null;
+      mensaje.imageName = null;
     }
 
     setState(() {});

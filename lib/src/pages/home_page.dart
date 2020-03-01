@@ -3,37 +3,39 @@ import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/models/mensaje_model.dart';
+import 'package:formvalidation/src/utils/utils.dart' as utils;
 
 class HomePage extends StatelessWidget {
   
   
   @override
   Widget build(BuildContext context) {
-
+    
     final mensajesBloc = Provider.mensajesBloc(context);
     mensajesBloc.cargarMensajes();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home')
-      ),
-      body: _crearListado(mensajesBloc),
+      
+      
+      body:Stack(children: <Widget>[utils.crearFondo(context,null),_crearListado(mensajesBloc)]),
       floatingActionButton: _crearBoton( context ),
     );
   }
 
 
   Widget _crearListado(MensajesBloc mensajesBloc ) {
-
+    
     return StreamBuilder(
       stream: mensajesBloc.productosStream,
       builder: (BuildContext context, AsyncSnapshot<List<MensajeModel>> snapshot){
+        
         
         if ( snapshot.hasData ) {
 
           final productos = snapshot.data;
 
           return ListView.builder(
+            
             itemCount: productos.length,
             itemBuilder: (context, i) => _crearItem(context, mensajesBloc, productos[i] ),
           );
@@ -46,42 +48,68 @@ class HomePage extends StatelessWidget {
 
   }
 
-  Widget _crearItem(BuildContext context, MensajesBloc productosBloc, MensajeModel producto ) {
-
-    return Dismissible(
+  Widget _crearItem(BuildContext context, MensajesBloc productosBloc, MensajeModel mensaje ) {
+    
+    return Container(
+            margin: EdgeInsets.symmetric(horizontal: 10.0,vertical: 10.0),
+            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0 ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 3.0,
+                  offset: Offset(0.0, 5.0),
+                  spreadRadius: 3.0
+                )
+              ]
+            ),
       key: UniqueKey(),
-      background: Container(
-        color: Colors.red,
-      ),
+      
      /* onDismissed: ( direccion )=> productosBloc.borrarProducto(producto.id),*/
-      child: Card(
+      
+        
         child: Column(
+          
           children: <Widget>[
-           
-            ( producto.imageName == null ) 
-              ? Image(image: AssetImage('assets/no-image.png'))
+           ListTile(
+              title:Row(children: <Widget>[
+               CircleAvatar(
+            child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                 child: Image(image:(mensaje.user.imageName!=null)? NetworkImage("${utils.url}/imagenes/user/"+mensaje.user.imageName)
+                 :AssetImage('assets/perfil-no-image.jpg'),
+                 )
+                 ),
+            ),
+               
+              Text('  ${ mensaje.user.username }',style: TextStyle(fontSize: 23.0))
+              ]
+              ),
+              subtitle: Text( mensaje.informacion,style: TextStyle(fontSize: 17.0), ),
+              onTap: () => Navigator.pushNamed(context, 'mensaje', arguments: mensaje ),
+            ),
+            ( mensaje.imageName == null ) 
+              ? Container(height:20 )
               : FadeInImage(
-                image: AdvancedNetworkImage( producto.imageName,
+                image: AdvancedNetworkImage( "${utils.url}/imagenes/mensaje/"+mensaje.imageName,
                       
                         useDiskCache: true,
                         cacheRule: CacheRule(maxAge: const Duration(days: 7)),
                         ) ,
                 placeholder:AssetImage(  'assets/jar-loading.gif'),
                 height: 300.0,
-                width: double.infinity,
+                width: double.maxFinite,
                 fit: BoxFit.cover,
               ),
             
-            ListTile(
-              title: Text('${ producto.user.username }'),
-              subtitle: Text( producto.informacion ),
-              onTap: () => Navigator.pushNamed(context, 'producto', arguments: producto ),
-            ),
+            
 
           ],
         ),
-      )
-    );
+      );
+    
 
 
     
@@ -93,7 +121,7 @@ class HomePage extends StatelessWidget {
     return FloatingActionButton(
       child: Icon( Icons.add ),
       backgroundColor: Colors.deepPurple,
-      onPressed: ()=> Navigator.pushNamed(context, 'producto'),
+      onPressed: ()=> Navigator.pushNamed(context, 'mensaje'),
     );
   }
 
