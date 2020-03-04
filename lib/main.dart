@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
     final prefs = new PreferenciasUsuario();
     print( prefs.token );
 
-    var _initialRoute= (prefs.token!=null)? 'home':'login';
+    var _initialRoute= (prefs.token!=null)? 'tapped':'login';
 
     
     print(prefs.usuarioApp);
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         
         debugShowCheckedModeBanner: false,
         title: 'Material App',
-        initialRoute: 'tapped',
+        initialRoute: _initialRoute,
         routes: {
           'login'    : ( BuildContext context ) => LoginPage(),
           'registro' : ( BuildContext context ) => RegistroPage(),

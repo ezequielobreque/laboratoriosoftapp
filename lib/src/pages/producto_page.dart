@@ -262,7 +262,7 @@ class _MensajePageState extends State<MensajePage> {
     }
 
 
-    // setState(() {_guardando = false; });
+    setState(() {_guardando = false; });
     mostrarSnackbar('Registro guardado');
 
     Navigator.pop(context);
@@ -274,7 +274,7 @@ class _MensajePageState extends State<MensajePage> {
 
     final snackbar = SnackBar(
       content: Text( mensaje ),
-      duration: Duration( milliseconds: 1500),
+      duration: Duration( seconds: 5),
     );
 
     scaffoldKey.currentState.showSnackBar(snackbar);
