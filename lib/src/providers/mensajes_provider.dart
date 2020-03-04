@@ -21,14 +21,16 @@ class MensajesProvider {
   Future<bool> crearMensaje( MensajeModel mensaje, File imagen) async {
     
     final url = '$_url/crearmensaje?access_token=${_prefs.token}';
-
+    print ('llege1');
      var _bodyToken = new Map<String, dynamic>();
     _bodyToken['informacion'] = mensaje.informacion;
     _bodyToken['imageFile'] =imagen;
-   
+   print ('llege2');
+
 
     final resp = await http.post(url,body: _bodyToken );
 
+    
     final decodedData = json.decode(resp.body);
 
     print( decodedData );

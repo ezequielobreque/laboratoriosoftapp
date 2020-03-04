@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         
         debugShowCheckedModeBanner: false,
         title: 'Material App',
-        initialRoute: 'tapped',//_initialRoute,
+        initialRoute: 'tapped',
         routes: {
           'login'    : ( BuildContext context ) => LoginPage(),
           'registro' : ( BuildContext context ) => RegistroPage(),

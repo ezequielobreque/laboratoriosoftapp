@@ -18,7 +18,7 @@ class _RegistroPageState extends State<RegistroPage> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          utils.crearFondo( context,null),
+          utils.crearFondo( context,'Registro Page'),
           _loginForm( context ),
         ],
       )

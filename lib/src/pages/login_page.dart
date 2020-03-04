@@ -15,7 +15,7 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          utils.crearFondo(context,null)(context),
+          utils.crearFondo(context,'Login de usuario'),
           _loginForm( context ),
         ],
       )

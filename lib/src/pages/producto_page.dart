@@ -312,7 +312,6 @@ class _MensajePageState extends State<MensajePage> {
 
 
   _seleccionarFoto() async {
-
     _procesarImagen( ImageSource.gallery );
 
   }
