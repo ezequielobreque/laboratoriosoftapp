@@ -6,13 +6,28 @@ import 'package:rxdart/rxdart.dart';
 
 
 
+class MisMensajesBloc{
+
+  final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>();
+  final _mensajesProvider   = new MensajesProvider();
+  Stream<List<MensajeModel>> get mensajesStream => _mensajesControllerMisMensajes.stream;
+   void cargarMisMensajes() async {
+
+    final mensajes = await _mensajesProvider.cargarMisMensajes();
+    _mensajesControllerMisMensajes.sink.add( mensajes );
+  }
+    dispose() {
+    _mensajesControllerMisMensajes?.close();
+    }
+}
+
+
 
 
 class MensajesBloc {
 
   final _mensajesControllerMensajes = new BehaviorSubject<List<MensajeModel>>();
   
-  final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>();
   final _cargandoController  = new BehaviorSubject<bool>();
 
   final _mensajesProvider   = new MensajesProvider();
@@ -20,7 +35,6 @@ class MensajesBloc {
 
   Stream<List<MensajeModel>> get productosStream => _mensajesControllerMensajes.stream;
   
-  Stream<List<MensajeModel>> get mensajesStream => _mensajesControllerMisMensajes.stream;
   Stream<bool> get cargando => _cargandoController.stream;
 
 
@@ -31,11 +45,7 @@ class MensajesBloc {
     _mensajesControllerMensajes.sink.add( mensajes );
   }
 
-   void cargarMisMensajes() async {
-
-    final mensajes = await _mensajesProvider.cargarMisMensajes();
-    _mensajesControllerMisMensajes.sink.add( mensajes );
-  }
+  
 
 
   void crearMensaje( MensajeModel mensaje ,File file) async {
@@ -75,7 +85,6 @@ class MensajesBloc {
   dispose() {
     _mensajesControllerMensajes?.close();
     
-    _mensajesControllerMisMensajes?.close();
     _cargandoController?.close();
   }
 

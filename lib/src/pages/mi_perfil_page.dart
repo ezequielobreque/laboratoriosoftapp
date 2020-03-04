@@ -12,22 +12,22 @@ class MiPerfilPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    final mensajesBloc = Provider.mensajesBloc(context);
-    mensajesBloc.cargarMisMensajes();
+    final misMensajesBloc = Provider.misMensajesBloc(context);
+    misMensajesBloc.cargarMisMensajes();
 
     return Scaffold(
       
       
-      body:Stack(children: <Widget>[utils.crearFondo(context,null),_crearListado(mensajesBloc)]),
+      body:Stack(children: <Widget>[utils.crearFondo(context,null),_crearListado(misMensajesBloc)]),
       floatingActionButton: _crearBoton( context ),
     );
   }
 
 
-  Widget _crearListado(MensajesBloc mensajesBloc ) {
+  Widget _crearListado(MisMensajesBloc misMensajesBloc ) {
     
     return StreamBuilder(
-      stream: mensajesBloc.productosStream,
+      stream: misMensajesBloc.mensajesStream,
       builder: (BuildContext context, AsyncSnapshot<List<MensajeModel>> snapshot){
         
         
@@ -38,7 +38,7 @@ class MiPerfilPage extends StatelessWidget {
           return ListView.builder(
             
             itemCount: productos.length,
-            itemBuilder: (context, i) => _crearItem(context, mensajesBloc, productos[i] ),
+            itemBuilder: (context, i) => _crearItem(context, misMensajesBloc, productos[i] ),
           );
 
         } else {
@@ -49,7 +49,7 @@ class MiPerfilPage extends StatelessWidget {
 
   }
 
-  Widget _crearItem(BuildContext context, MensajesBloc productosBloc, MensajeModel mensaje ) {
+  Widget _crearItem(BuildContext context, MisMensajesBloc productosBloc, MensajeModel mensaje ) {
     
     return Container(
             margin: EdgeInsets.symmetric(horizontal: 10.0,vertical: 10.0),
