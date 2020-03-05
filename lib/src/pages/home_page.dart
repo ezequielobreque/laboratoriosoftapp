@@ -75,19 +75,29 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
            ListTile(
               title:Row(children: <Widget>[
-               CircleAvatar(
-            child: ClipRRect(
+               CircleAvatar
+            (
+                radius: 22.0,
+                backgroundImage:(mensaje.user.imageName!=null)? NetworkImage("${utils.url}/imagenes/user/"+mensaje.user.imageName)
+                 :AssetImage('assets/perfil-no-image.jpg'),
+                backgroundColor: Colors.transparent,
+              )
+            
+             /*ClipRRect(
+                  
                   borderRadius: BorderRadius.circular(20.0),
                  child: Image(image:(mensaje.user.imageName!=null)? NetworkImage("${utils.url}/imagenes/user/"+mensaje.user.imageName)
                  :AssetImage('assets/perfil-no-image.jpg'),
                  )
-                 ),
-            ),
+                 )*/
+                 
+                 ,
+            
                
-              Text('  ${ mensaje.user.username }',style: TextStyle(fontSize: 23.0))
+              Text('  ${ mensaje.user.username }',style: TextStyle(fontSize: 22.0))
               ]
               ),
-              subtitle: Text( mensaje.informacion,style: TextStyle(fontSize: 17.0), ),
+              subtitle: Text( mensaje.informacion,style: TextStyle(fontSize: 18.5,color: Color.fromRGBO(44, 62, 80,1.0)), ),
               onTap: () => Navigator.pushNamed(context, 'mensaje', arguments: mensaje ),
             ),
             ( mensaje.imageName == null ) 
@@ -99,9 +109,9 @@ class HomePage extends StatelessWidget {
                         cacheRule: CacheRule(maxAge: const Duration(days: 7)),
                         ) ,
                 placeholder:AssetImage(  'assets/jar-loading.gif'),
-                height: 300.0,
+                
                 width: double.maxFinite,
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
               ),
             
             
