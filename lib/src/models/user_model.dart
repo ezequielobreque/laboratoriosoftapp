@@ -5,9 +5,32 @@
 import 'dart:convert';
 import '../utils/utils.dart' as utils;
 
+
+
 UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 
 String userModelToJson(UserModel data) => json.encode(data.toJson());
+
+class Usuarios {
+
+  List<UserModel> items = new List();
+
+  Usuarios();
+
+  Usuarios.fromJsonList( List<dynamic> jsonList  ) {
+
+    if ( jsonList == null ) return;
+
+    for ( var item in jsonList  ) {
+      final user = new UserModel.fromJson(item);
+      items.add( user );
+    }
+
+  }
+
+}
+
+
 
 
 class UserModel {

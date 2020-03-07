@@ -1,8 +1,8 @@
 import 'dart:convert';
-
+import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'package:formvalidation/src/models/user_model.dart';
 import 'package:formvalidation/src/preferencias_usuario/preferencias_usuario.dart';
-import 'package:http/http.dart' as http;
 
 import '../utils/utils.dart' as utils;
 
@@ -96,6 +96,7 @@ class UsuarioProvider {
 
 
   }
+
 
 
 
