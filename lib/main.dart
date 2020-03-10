@@ -8,6 +8,7 @@ import 'package:formvalidation/src/pages/mi_perfil_page.dart';
 import 'package:formvalidation/src/pages/principal_page.dart';
 import 'package:formvalidation/src/pages/producto_page.dart';
 import 'package:formvalidation/src/pages/registro_page.dart';
+import 'package:formvalidation/src/pages/usuarios_megusta_page.dart';
 import 'package:formvalidation/src/preferencias_usuario/preferencias_usuario.dart';
 import 'package:formvalidation/src/preferencias_usuario/usuario.dart';
 
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
           'mensaje' : ( BuildContext context ) => MensajePage(),
           'miperfil' :( BuildContext context ) => MiPerfilPage(),
           'tapped' :(BuildContext context)=>TabbedAppBarDemo(),
+          'usuariosmegusta' :(BuildContext context)=>UsuariosMeGustaPage(),
         },
         theme: ThemeData(
           primaryColor: Colors.deepPurple,

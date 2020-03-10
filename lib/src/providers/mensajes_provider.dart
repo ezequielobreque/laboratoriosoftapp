@@ -109,6 +109,7 @@ if (response.statusCode == 200) print('Uploaded!');
   
 
   }
+  
 
 
 
@@ -168,6 +169,26 @@ if (response.statusCode == 200) print('Uploaded!');
     // print( productos[0].id );
 
     return mensajes;
+
+  }
+
+    Future<bool> darMeGusta(int id) async {
+      
+    /*final llamado = Uri.https(_url, '/busquedas/usuarios?access_token=${_prefs.token}', {
+      'busqueda':query
+    });*/
+    
+
+
+    final resp = await http.post(
+      
+      _url+'/megusta/${id}?access_token=${_prefs.token}',
+    );
+    
+    final decodedData = json.decode(resp.body);
+    print(decodedData);
+    
+    return true;
 
   }
   

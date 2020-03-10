@@ -10,12 +10,22 @@ class MisMensajesBloc{
 
   final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>();
   final _mensajesProvider   = new MensajesProvider();
+
+  final _cargandoController  = new BehaviorSubject<bool>();
   Stream<List<MensajeModel>> get mensajesStream => _mensajesControllerMisMensajes.stream;
    void cargarMisMensajes() async {
 
     final mensajes = await _mensajesProvider.cargarMisMensajes();
     _mensajesControllerMisMensajes.sink.add( mensajes );
   }
+  void darMeGusta(int id) async {
+
+    _cargandoController.sink.add(true);
+    await _mensajesProvider.darMeGusta(id);
+    _cargandoController.sink.add(false);
+
+  }
+
     dispose() {
     _mensajesControllerMisMensajes?.close();
     }
@@ -52,6 +62,13 @@ class MensajesBloc {
 
     _cargandoController.sink.add(true);
     await _mensajesProvider.crearMensaje(mensaje,file);
+    _cargandoController.sink.add(false);
+
+  }
+  void darMeGusta(int id) async {
+
+    _cargandoController.sink.add(true);
+    await _mensajesProvider.darMeGusta(id);
     _cargandoController.sink.add(false);
 
   }

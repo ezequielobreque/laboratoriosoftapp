@@ -13,7 +13,7 @@ String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class Usuarios {
 
-  List<UserModel> items = new List();
+  List<UserModel> users = new List();
 
   Usuarios();
 
@@ -23,12 +23,13 @@ class Usuarios {
 
     for ( var item in jsonList  ) {
       final user = new UserModel.fromJson(item);
-      items.add( user );
+      users.add( user );
     }
 
   }
 
 }
+
 
 
 
@@ -53,11 +54,23 @@ class UserModel {
         imageName: (json["image_name"]==null)? null : json["image_name"],
     );
 
+    
+
     Map<String, dynamic> toJson() => {
         "id": id,
         "username": username,
         "email": email,
         "image_name": imageName,
     };
+
+ /*   List<UserModel> crearUsuarios(List<Map<String, dynamic>> json){
+      
+     List<UserModel> usuarios= new List();
+    for ( var value in json  ) {
+      final user = new UserModel.fromJson(value);
+      usuarios.add( user );
+    }
+    return usuarios;
+}*/
 
 }

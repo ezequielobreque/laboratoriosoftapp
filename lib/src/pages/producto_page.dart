@@ -262,8 +262,9 @@ class _MensajePageState extends State<MensajePage> {
     }
 
 
-    setState(() {_guardando = false; });
-    mostrarSnackbar('Registro guardado');
+    setState(() {_guardando = false; 
+    
+    mostrarSnackbar('Registro guardado');});
 
     Navigator.pop(context);
 
@@ -289,9 +290,7 @@ class _MensajePageState extends State<MensajePage> {
       return FadeInImage(
         image: NetworkImage( "${utils.url}/imagenes/mensaje/"+mensaje.imageName ),
         placeholder: AssetImage('assets/jar-loading.gif'),
-        width: double.infinity,
-        
-        
+       width: double.maxFinite,
         fit: BoxFit.contain,
       );
 

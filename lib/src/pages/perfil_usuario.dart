@@ -1,20 +1,16 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_networkimage/provider.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/models/mensaje_model.dart';
 import 'package:formvalidation/src/preferencias_usuario/usuario.dart';
 import 'package:formvalidation/src/utils/utils.dart' as utils;
 
-class MiPerfilPage extends StatefulWidget {
-  
-  
-  @override
-  _MiPerfilPageState createState() => _MiPerfilPageState();
-}
+class PerfilUsuarioPage extends StatelessWidget {
 
-class _MiPerfilPageState extends State<MiPerfilPage> {
+
+
   @override
   Widget build(BuildContext context) {
     
@@ -28,6 +24,7 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
       floatingActionButton: _crearBoton( context ),
     );
   }
+
 
   Widget _crearListado(MisMensajesBloc misMensajesBloc ) {
     
@@ -55,10 +52,7 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
   }
 
   Widget _crearItem(BuildContext context, MisMensajesBloc productosBloc, MensajeModel mensaje ) {
-    var variable=false;
-    for ( var item in mensaje.meGustas.users  ) {
-      if (item.id==userApp().id){variable=true;}
-    };
+    
     return GestureDetector(
 
           onTap: () => Navigator.pushNamed(context, 'mensaje', arguments: mensaje ),
@@ -114,62 +108,20 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
                   width: double.maxFinite,
                   fit: BoxFit.contain,
                 ),
-                
-                    Divider(),
-              Row(
-                
-  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  FlatButton.icon(
-                    icon: Icon(FontAwesomeIcons.solidThumbsUp,color: (
-                      (
-                      variable?
-                      Colors.blue
-                      :Colors.grey)
-                    )
-                      ),
-                    label: Text('Me gusta'),
-                    color: Colors.black12,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      
-                    
-                    onPressed:(){setState(() {
-                      
-                     productosBloc.darMeGusta(mensaje.id);
-                    });},
-                  
-                  
-                      ),
-                    VerticalDivider(thickness: 20,color: Colors.red,), 
-
-                  FlatButton.icon(
-                    
-                  onPressed: (){},
-                  color: Colors.black12,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-                          
-                  label:Text('(${mensaje.meGustas.users.length})'),
-                  icon:Icon(FontAwesomeIcons.thumbsUp,size: 15.0,),
-
-                  )
-                  
-                ],
               
               
 
-            
+            ],
           ),
-          ],
-
         ),
-    ));
-  
+    );
     
 
 
     
 
   }
+
 
   _crearBoton(BuildContext context) {
     return FloatingActionButton(
@@ -178,4 +130,5 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
       onPressed: ()=> Navigator.pushNamed(context, 'mensaje'),
     );
   }
+
 }

@@ -18,7 +18,7 @@ class UsuarioBusquedas {
     final usuarios = new Usuarios.fromJsonList(decodedData['results']);
 
 
-    return usuarios.items;
+    return usuarios.users;
   }
 
 
@@ -46,7 +46,7 @@ class UsuarioBusquedas {
     final usuarios = new Usuarios.fromJsonList(decodedData);
     print(usuarios);
     
-    return usuarios.items;
+    return usuarios.users;
 
   }
 

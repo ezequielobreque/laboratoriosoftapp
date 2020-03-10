@@ -15,6 +15,8 @@ String mensajeModelToJson(MensajeModel data) => json.encode(data.toJson());
 class MensajeModel {
     int id;
     UserModel user;
+
+    Usuarios meGustas;
     String informacion;
     String imageName;
     DateTime fechaHora;
@@ -25,7 +27,8 @@ class MensajeModel {
         this.user,
         this.informacion,
         this.fechaHora,
-        this.imageName
+        this.imageName,
+        this.meGustas
     });
 
     factory MensajeModel.fromJson(Map<String, dynamic> json) => MensajeModel(
@@ -33,7 +36,7 @@ class MensajeModel {
         user: UserModel.fromJson(json["user"]),
         informacion: json["informacion"],
         fechaHora: DateTime.parse(json["fecha_hora"]),
-        
+        meGustas: Usuarios.fromJsonList(json["me_gustas"]),
         imageName:(json["image_name"]==null)? null : json["image_name"]
         
     );
