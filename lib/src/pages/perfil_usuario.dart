@@ -14,13 +14,13 @@ class PerfilUsuarioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    final misMensajesBloc = Provider.misMensajesBloc(context);
-    misMensajesBloc.cargarMisMensajes();
+    final cargarMensajesBloc = Provider.misMensajesBloc(context);
+    cargarMensajesBloc.cargarMisMensajes();
 
     return Scaffold(
       
       
-      body:Stack(children: <Widget>[utils.crearFondo(context,null),_crearListado(misMensajesBloc)]),
+      body:Stack(children: <Widget>[utils.crearFondo(context,null),_crearListado(cargarMensajesBloc)]),
       floatingActionButton: _crearBoton( context ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/pages/home_page.dart';
 import 'package:formvalidation/src/pages/login_page.dart';
 import 'package:formvalidation/src/pages/mi_perfil_page.dart';
+import 'package:formvalidation/src/pages/perfil_usuario.dart';
 import 'package:formvalidation/src/pages/principal_page.dart';
 import 'package:formvalidation/src/pages/producto_page.dart';
 import 'package:formvalidation/src/pages/registro_page.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
     final prefs = new PreferenciasUsuario();
     print( prefs.token );
 
-    var _initialRoute= (prefs.token!=null)? 'tapped':'login';
+    var _initialRoute= (prefs.token!=null || prefs.token=='')? 'tapped':'login';
 
     
     print(prefs.usuarioApp);
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
           'miperfil' :( BuildContext context ) => MiPerfilPage(),
           'tapped' :(BuildContext context)=>TabbedAppBarDemo(),
           'usuariosmegusta' :(BuildContext context)=>UsuariosMeGustaPage(),
+          'perfilusuario' :(BuildContext context)=>PerfilUsuarioPage(),
         },
         theme: ThemeData(
           primaryColor: Colors.deepPurple,

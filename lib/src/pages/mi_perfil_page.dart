@@ -144,7 +144,7 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
 
                   FlatButton.icon(
                     
-                  onPressed: (){},
+                   onPressed: (){Navigator.pushNamed(context, 'usuariosmegusta', arguments: mensaje );},
                   color: Colors.black12,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                           

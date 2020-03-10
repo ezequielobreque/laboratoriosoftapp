@@ -21,6 +21,8 @@ class UsuariosMeGustaPage extends StatelessWidget {
       mensaje = prodData;
     }
     return Scaffold(
+         appBar: AppBar(
+        title: Text('Usuarios que dieron me gusta')),
         body:ListView(
               children: mensaje.meGustas.users.map( (user) {
                   return ListTile(
@@ -35,7 +37,7 @@ class UsuariosMeGustaPage extends StatelessWidget {
                     subtitle: Text( user.email),
                     onTap: (){
                       
-                      Navigator.pushNamed(context, 'detalle', arguments: user);
+                      Navigator.pushNamed(context, 'perfilusuario', arguments: user);
                     },
                   );
               }).toList()
