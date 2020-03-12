@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
@@ -118,10 +117,8 @@ class _HomePageState extends State<HomePage> {
             ( mensaje.imageName == null ) 
               ? Container(height:0 )
               : FadeInImage(
-                image: AdvancedNetworkImage( "${utils.url}/imagenes/mensaje/"+mensaje.imageName,
+                image: NetworkImage( "${utils.url}/imagenes/mensaje/"+mensaje.imageName,
                       
-                        useDiskCache: true,
-                        cacheRule: CacheRule(maxAge: const Duration(days: 7)),
                         ) ,
                 placeholder:AssetImage(  'assets/jar-loading.gif'),
                 

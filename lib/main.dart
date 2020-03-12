@@ -13,8 +13,6 @@ import 'package:formvalidation/src/pages/usuarios_megusta_page.dart';
 import 'package:formvalidation/src/preferencias_usuario/preferencias_usuario.dart';
 import 'package:formvalidation/src/preferencias_usuario/usuario.dart';
 
-import 'src/utils/utils.dart';
- 
 void main() async {
   
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +33,7 @@ class MyApp extends StatelessWidget {
     final prefs = new PreferenciasUsuario();
     print( prefs.token );
 
-    var _initialRoute= (prefs.token!=null || prefs.token=='')? 'tapped':'login';
+    var _initialRoute= (prefs.token!=null && prefs.token!='')? 'tapped':'tapped';
 
     
     print(prefs.usuarioApp);

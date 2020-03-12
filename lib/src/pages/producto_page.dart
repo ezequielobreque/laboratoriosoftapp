@@ -298,7 +298,7 @@ class _MensajePageState extends State<MensajePage> {
 
       return Image(
         image: new FileImage(new File( foto?.path ?? 'assets/no-image.png')),
-        height: 300.0,
+        
         fit: BoxFit.contain,
 
       );

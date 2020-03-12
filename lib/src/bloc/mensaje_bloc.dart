@@ -106,3 +106,27 @@ class MensajesBloc {
   }
 
 }
+class MensajesUsuariosBloc{
+
+  final _mensajesControllerMensajesUsuarios = new BehaviorSubject<List<MensajeModel>>();
+  final _mensajesProvider   = new MensajesProvider();
+
+  final _cargandoController  = new BehaviorSubject<bool>();
+  Stream<List<MensajeModel>> get mensajesStream => _mensajesControllerMensajesUsuarios.stream;
+   void cargarMensajesUsuarios(int id) async {
+
+    final mensajes = await _mensajesProvider.cargarMensajesUsuarios(id);
+    _mensajesControllerMensajesUsuarios.sink.add( mensajes );
+  }
+  void darMeGusta(int id) async {
+
+    _cargandoController.sink.add(true);
+    await _mensajesProvider.darMeGusta(id);
+    _cargandoController.sink.add(false);
+
+  }
+
+    dispose() {
+    _mensajesControllerMensajesUsuarios?.close();
+    }
+}

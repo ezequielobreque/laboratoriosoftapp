@@ -92,19 +92,61 @@ if (response.statusCode == 200) print('Uploaded!');
 
   }
 
-  Future<bool> editarMensaje( MensajeModel mensaje ) async {
+  Future<bool> editarMensaje( MensajeModel mensaje ,File imagen) async {
     
-    final url = '$_url/editarmensaje/${mensaje.id}?access_token=${_prefs.token}';
 
-    print(mensajeModelToJson(mensaje));
+  final url = Uri.parse('$_url/editarmensaje/${mensaje.id}?access_token=${_prefs.token}');
 
-    final resp = await http.put( url, body: mensajeModelToJson(mensaje) );
 
-    final decodedData = json.decode(resp.body);
+    final mimeType = mime(imagen.path).split('/'); //image/jpeg
 
-    print( decodedData );
+    /*final imageUploadRequest = http.MultipartRequest(
+      'POST',
+      url
+    );
 
-    return true;
+    final file = await http.MultipartFile.fromPath
+    );
+
+    imageUploadRequest.files.add(file);*/
+    var request = http.MultipartRequest('POST', url)
+        ..fields['informacion'] = mensaje.informacion
+        ..files.add(await http.MultipartFile.fromPath(
+      'imagefile',
+      imagen.path,
+      contentType: MediaType( mimeType[0], mimeType[1] )
+          )
+          );
+      var response = await request.send();
+      print(request);
+if (response.statusCode == 200) print('Uploaded!');
+    
+
+
+    
+    final resp = await http.Response.fromStream(response);
+
+    if ( resp.statusCode != 200 && resp.statusCode != 201 ) {
+      print('Algo salio mal');
+      print( resp.body );
+      return null;
+    }
+
+    final respData = json.decode(resp.body);
+    print( respData);
+
+    return respData['id'];
+
+
+
+
+
+
+
+
+
+
+
 
   
 
@@ -171,7 +213,36 @@ if (response.statusCode == 200) print('Uploaded!');
     return mensajes;
 
   }
+  
+  Future<List<MensajeModel>> cargarMensajesUsuarios(int usuario) async {
 
+    final url  = '$_url/${usuario}/mensajes?access_token=${ _prefs.token }';
+    final resp = await http.get(url);
+
+    final List<dynamic> decodedData = json.decode(resp.body);
+    final List<MensajeModel> mensajes = new List();
+
+    print(decodedData);
+    if ( decodedData == null ) return [];
+
+
+
+    decodedData.forEach( (mens){
+
+      final prodTemp = MensajeModel.fromJson(mens);
+      
+      print(prodTemp.imageName);
+      
+      print(prodTemp.id);
+      mensajes.add( prodTemp );
+
+    });
+
+    // print( productos[0].id );
+
+    return mensajes;
+
+  }
     Future<bool> darMeGusta(int id) async {
       
     /*final llamado = Uri.https(_url, '/busquedas/usuarios?access_token=${_prefs.token}', {

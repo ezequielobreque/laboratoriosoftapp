@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/models/mensaje_model.dart';
+import 'package:formvalidation/src/models/user_model.dart';
 import 'package:formvalidation/src/preferencias_usuario/usuario.dart';
 import 'package:formvalidation/src/utils/utils.dart' as utils;
 
@@ -14,19 +14,21 @@ class PerfilUsuarioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    final cargarMensajesBloc = Provider.misMensajesBloc(context);
-    cargarMensajesBloc.cargarMisMensajes();
+    final cargarMensajesBloc = Provider.mensajesUsuariosBloc(context);
+    UserModel usuario=(ModalRoute.of(context).settings.arguments);
+    cargarMensajesBloc.cargarMensajesUsuarios(usuario.id);
 
     return Scaffold(
       
-      
+         appBar: AppBar(
+        title: Text(usuario.username)),
       body:Stack(children: <Widget>[utils.crearFondo(context,null),_crearListado(cargarMensajesBloc)]),
-      floatingActionButton: _crearBoton( context ),
+      
     );
   }
 
 
-  Widget _crearListado(MisMensajesBloc misMensajesBloc ) {
+  Widget _crearListado(MensajesUsuariosBloc misMensajesBloc ) {
     
     return StreamBuilder(
       stream: misMensajesBloc.mensajesStream,
@@ -51,7 +53,7 @@ class PerfilUsuarioPage extends StatelessWidget {
 
   }
 
-  Widget _crearItem(BuildContext context, MisMensajesBloc productosBloc, MensajeModel mensaje ) {
+  Widget _crearItem(BuildContext context, MensajesUsuariosBloc productosBloc, MensajeModel mensaje ) {
     
     return GestureDetector(
 
@@ -98,10 +100,8 @@ class PerfilUsuarioPage extends StatelessWidget {
               ( mensaje.imageName == null ) 
                 ? Container(height:20 )
                 : FadeInImage(
-                  image: AdvancedNetworkImage( "${utils.url}/imagenes/mensaje/"+mensaje.imageName,
+                  image: NetworkImage( "${utils.url}/imagenes/mensaje/"+mensaje.imageName,
                         
-                          useDiskCache: true,
-                          cacheRule: CacheRule(maxAge: const Duration(days: 7)),
                           ) ,
                   placeholder:AssetImage(  'assets/jar-loading.gif'),
                   

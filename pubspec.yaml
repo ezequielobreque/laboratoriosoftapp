@@ -29,7 +29,6 @@ dependencies:
   mime_type:
   shared_preferences:
   font_awesome_flutter: ^8.5.0
-  flutter_advanced_networkimage: ^0.7.0
   timeago: ^2.0.26
   
 

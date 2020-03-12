@@ -15,6 +15,8 @@ class Provider extends InheritedWidget {
   final _mensajesBloc = new MensajesBloc();
   final _misMensajesBloc = new MisMensajesBloc();
 
+  final _mensajesUsuariosBloc = new MensajesUsuariosBloc();
+
 
   static Provider _instancia;
 
@@ -49,6 +51,9 @@ class Provider extends InheritedWidget {
 }
  static MisMensajesBloc misMensajesBloc ( BuildContext context ){
    return context.dependOnInheritedWidgetOfExactType<Provider>()._misMensajesBloc;
+}
+static MensajesUsuariosBloc mensajesUsuariosBloc ( BuildContext context ){
+   return context.dependOnInheritedWidgetOfExactType<Provider>()._mensajesUsuariosBloc;
 }
 
 

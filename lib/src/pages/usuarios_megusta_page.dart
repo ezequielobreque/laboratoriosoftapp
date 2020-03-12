@@ -23,7 +23,7 @@ class UsuariosMeGustaPage extends StatelessWidget {
     return Scaffold(
          appBar: AppBar(
         title: Text('Usuarios que dieron me gusta')),
-        body:ListView(
+        body:(mensaje.meGustas.users!=null)?ListView(
               children: mensaje.meGustas.users.map( (user) {
                   return ListTile(
                     leading:CircleAvatar(
@@ -43,7 +43,7 @@ class UsuariosMeGustaPage extends StatelessWidget {
               }).toList()
         )
 
-
+          :Container(child: Text('sin megustas'),)
         );
     
   } 
