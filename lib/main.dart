@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
     final prefs = new PreferenciasUsuario();
     print( prefs.token );
 
-    var _initialRoute= (prefs.token!=null && prefs.token!='')? 'tapped':'tapped';
+    var _initialRoute= (prefs.token!=null && prefs.token!='')? 'tapped':'login';
 
     
     print(prefs.usuarioApp);

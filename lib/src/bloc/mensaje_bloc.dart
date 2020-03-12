@@ -84,10 +84,10 @@ class MensajesBloc {
   }
 
 
-   void editarMensaje( MensajeModel mensaje ) async {
+   void editarMensaje( MensajeModel mensaje,File file ) async {
 
     _cargandoController.sink.add(true);
-    await _mensajesProvider.editarMensaje(mensaje);
+    await _mensajesProvider.editarMensaje(mensaje,file);
     _cargandoController.sink.add(false);
 
   }

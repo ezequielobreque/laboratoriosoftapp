@@ -258,7 +258,7 @@ class _MensajePageState extends State<MensajePage> {
     if ( mensaje.id == null ) {
       mensajesBloc.crearMensaje(mensaje,foto);
     } else {
-      mensajesBloc.editarMensaje(mensaje);
+      mensajesBloc.editarMensaje(mensaje,foto);
     }
 
 
