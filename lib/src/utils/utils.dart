@@ -10,7 +10,7 @@ bool isNumeric( String s ) {
 
 }
 
-String url= 'http://10.0.2.2:8000';
+String url= 'http://192.168.43.92:8000';
 
 
 
@@ -75,8 +75,7 @@ crearFondo(BuildContext context, String fondo){
         color: Color.fromRGBO(255, 255, 255, 0.05)
       ),
     );*/
-  Widget fon= (fondo!=null)? (Container(
-         
+  Widget fon= (fondo!=null)? (Container(      
           padding: EdgeInsets.only(top: 80.0),
           child: Column(
             children: <Widget>[

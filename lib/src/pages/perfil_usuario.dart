@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
@@ -109,8 +108,7 @@ class PerfilUsuarioPage extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               
-              
-
+            
             ],
           ),
         ),

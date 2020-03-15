@@ -10,8 +10,8 @@ class Choice {
 const List<Choice> choices = <Choice>[
   Choice(title: 'Mi muro', icon: Icons.home),
   Choice(title: 'mi perfil', icon: FontAwesomeIcons.userAlt),
-  Choice(title: 'Busquedas', icon: Icons.search),
   Choice(title: 'Opciones', icon: Icons.settings),
+  
 
 ];
 
@@ -32,7 +32,7 @@ class ChoicePage extends StatelessWidget {
           children: <Widget>[
             Icon(
               choice.icon,
-              size: 150.0,
+              size: 50.0,
               color: textStyle.color,
             ),
             Text(

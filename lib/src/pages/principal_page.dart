@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/pages/home_page.dart';
 import 'package:formvalidation/src/pages/mi_perfil_page.dart';
@@ -13,24 +14,36 @@ class TabbedAppBarDemo extends StatelessWidget {
    
     return DefaultTabController(
 
-        length: choices.length,
+        length: 4,
         child: Scaffold(
           appBar: 
              AppBar(
               elevation: 10.0,
+              
               bottom: PreferredSize(
 
-                preferredSize: Size.fromHeight(18.0),
+                preferredSize:Size.fromHeight(0.0),
                 child: TabBar(
-                   
+                   labelPadding: EdgeInsets.symmetric(horizontal: 28.0),
                   
                   isScrollable: true,
-                  tabs: choices.map<Widget>((Choice choice) {
-                    return Tab(
-                      text: choice.title,
-                      icon: Icon(choice.icon),
-                    );
-                  }).toList(),
+                  tabs: [
+                  Tab(icon: Icon(Icons.home)),
+                  Tab(icon: Icon(FontAwesomeIcons.userAlt)),
+                  Tab(icon:IconButton(iconSize: 30,icon: Icon(Icons.search),
+                                  onPressed: () {
+                                showSearch(context: context, delegate: DataSearch());
+                              },
+                            ),
+                  ),
+                        
+                    
+                  
+                    
+                  Tab(icon: Icon( Icons.settings)),
+                    
+
+                  ]
                   
                 ),
               ),
@@ -40,16 +53,7 @@ class TabbedAppBarDemo extends StatelessWidget {
             children: [
               HomePage(),
               MiPerfilPage(),
-                
-              new IconButton(
-              icon: new Icon(Icons.bookmark),
-              onPressed: () {showSearch(
-                context: context, 
-                delegate: DataSearch(),
-                // query: 'Hola'
-                );},
-              ),  
-
+              Container(),
               Icon(Icons.directions_bike),
             ]
 

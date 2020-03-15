@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/models/mensaje_model.dart';
@@ -26,6 +27,7 @@ class _MensajePageState extends State<MensajePage> {
   MensajeModel mensaje = new MensajeModel();
   bool _guardando = false;
   File foto;
+  bool fx=true;
   var _user=userApp();
   @override
   Widget build(BuildContext context) {
@@ -119,8 +121,10 @@ class _MensajePageState extends State<MensajePage> {
               children: <Widget>[
                 _mostrarNombre(),
                 _crearInformacion(),
+
+                _crearBotonSacarFoto(),
                 _mostrarFoto(),
-                _crearBoton()
+                _crearBotonDePublicacion(),
               ],
             ),
           ),
@@ -229,7 +233,7 @@ class _MensajePageState extends State<MensajePage> {
 
 
 
-  Widget _crearBoton() {
+  Widget _crearBotonDePublicacion() {
     return RaisedButton.icon(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0)
@@ -286,6 +290,8 @@ class _MensajePageState extends State<MensajePage> {
   Widget _mostrarFoto() {
 
     if ( mensaje.imageName != null ) {
+    
+    
       
       return FadeInImage(
         image: NetworkImage( "${utils.url}/imagenes/mensaje/"+mensaje.imageName ),
@@ -293,16 +299,17 @@ class _MensajePageState extends State<MensajePage> {
        width: double.maxFinite,
         fit: BoxFit.contain,
       );
-
+    
+      
     } else {
-
+      if(fx!=false){
       return Image(
         image: new FileImage(new File( foto?.path ?? 'assets/no-image.png')),
         
         fit: BoxFit.contain,
 
       );
-
+      }else{return Container();}
     }
 
   }
@@ -330,9 +337,21 @@ class _MensajePageState extends State<MensajePage> {
       mensaje.imageName = null;
     }
 
-    setState(() {});
+    setState(() {fx=true;});
 
   }
+
+ Widget _crearBotonSacarFoto() {
+
+   return IconButton(
+      
+      color: Colors.red,
+      
+      
+      icon:Icon(FontAwesomeIcons.cross),
+      onPressed: (){setState((){fx=false; mensaje.imageName=null;});}
+    );
+ }
 
 
 }
