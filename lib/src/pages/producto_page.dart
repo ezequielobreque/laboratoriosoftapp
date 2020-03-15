@@ -270,7 +270,7 @@ class _MensajePageState extends State<MensajePage> {
     
     mostrarSnackbar('Registro guardado');});
 
-    Navigator.pop(context);
+    Navigator.pushNamed(context,'tapped');
 
   }
 

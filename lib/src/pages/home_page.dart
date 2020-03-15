@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
 
   }
 
-  Widget _crearItem(BuildContext context, MensajesBloc mensajesBloc, MensajeModel mensaje ) {
+  Widget _crearItem(BuildContext context, dynamic mensajesBloc, MensajeModel mensaje ) {
     var variable=false;
     for ( var item in mensaje.meGustas.users  ) {
       if (item.id==userApp().id){variable=true;}
@@ -155,11 +155,18 @@ class _HomePageState extends State<HomePage> {
 
                   FlatButton.icon(
                     
-                  onPressed: (){Navigator.pushNamed(context, 'usuariosmegusta', arguments: mensaje );},
+                  onPressed: (){Navigator.pushNamed(context, 'usuariosmegusta',  arguments: mensaje).then((value) {
+                  setState(() {});});}
+                    
+                  
+                
+                 
+                    
+                  ,
                   color: Colors.black12,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                           
-                  label:Text('(${mensaje.meGustas.users.length})'),
+                  label:Text('(${ mensaje.meGustas.users.length})'),
                   icon:Icon(FontAwesomeIcons.thumbsUp,size: 15.0,),
 
                   )
@@ -183,7 +190,8 @@ class _HomePageState extends State<HomePage> {
     return FloatingActionButton(
       child: Icon( Icons.add ),
       backgroundColor: Colors.deepPurple,
-      onPressed: ()=> Navigator.pushNamed(context, 'mensaje'),
+      onPressed: ()=> Navigator.pushNamed(context, 'mensaje').then((value) {
+                  setState(() {});}),
     );
   }
 }

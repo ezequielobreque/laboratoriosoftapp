@@ -27,9 +27,10 @@ class MensajesProvider {
     _bodyToken['imageFile'] =imagen;
    print ('llege2');*/
 
-
+  
 
   final url = Uri.parse('$_url/crearmensaje?access_token=${_prefs.token}');
+    if (imagen!=null){
     final mimeType = mime(imagen.path).split('/'); //image/jpeg
 
     /*final imageUploadRequest = http.MultipartRequest(
@@ -41,6 +42,8 @@ class MensajesProvider {
     );
 
     imageUploadRequest.files.add(file);*/
+
+
     var request = http.MultipartRequest('POST', url)
         ..fields['informacion'] = mensaje.informacion
         ..files.add(await http.MultipartFile.fromPath(
@@ -63,12 +66,25 @@ if (response.statusCode == 200) print('Uploaded!');
       print( resp.body );
       return null;
     }
-
+  
     final respData = json.decode(resp.body);
     print( respData);
-
+  
     return respData['id'];
+  }else{
+var response = await http.post(url,body:{"informacion": mensaje.informacion});
+  
 
+
+
+    
+   
+
+    final respData = json.decode(response.body);
+    print( respData);
+  
+    return respData['id'];
+  }
 
 
 
@@ -96,7 +112,7 @@ if (response.statusCode == 200) print('Uploaded!');
     
 
   final url = Uri.parse('$_url/editarmensaje/${mensaje.id}?access_token=${_prefs.token}');
-
+if(imagen!=null){
 
     final mimeType = mime(imagen.path).split('/'); //image/jpeg
 
@@ -136,7 +152,23 @@ if (response.statusCode == 200) print('Uploaded!');
     print( respData);
 
     return respData['id'];
+}else{
 
+var response = await http.post(url,body:{"informacion": mensaje.informacion});
+  
+
+
+
+    
+   
+
+    final respData = json.decode(response.body);
+    print( respData);
+  
+    return respData['id'];
+
+
+}
 
 
 

@@ -101,7 +101,7 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
                 subtitle: Text( mensaje.informacion,style: TextStyle(fontSize: 18.5,color: Color.fromRGBO(44, 62, 80,1.0)), ),
               ),
               ( mensaje.imageName == null ) 
-                ? Container(height:20 )
+                ? Container(height:0 )
                 : FadeInImage(
                   image: NetworkImage( "${utils.url}/imagenes/mensaje/"+mensaje.imageName,
                         
@@ -172,7 +172,8 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
     return FloatingActionButton(
       child: Icon( Icons.add ),
       backgroundColor: Colors.deepPurple,
-      onPressed: ()=> Navigator.pushNamed(context, 'mensaje'),
+      onPressed: ()=> Navigator.pushNamed(context, 'mensaje').then((value) {
+                  setState(() {});}),
     );
   }
 }
