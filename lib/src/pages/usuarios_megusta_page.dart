@@ -11,7 +11,7 @@ class UsuariosMeGustaPage extends StatelessWidget {
     MensajeModel mensaje= new MensajeModel();
   @override
   Widget build(BuildContext context) {
-        mensajesBloc = Provider.mensajesBloc(context);
+        mensajesBloc = MensajesBloc();
 
 
 

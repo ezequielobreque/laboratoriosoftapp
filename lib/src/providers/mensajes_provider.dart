@@ -2,6 +2,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
+import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/models/mensaje_model.dart';
 import 'package:formvalidation/src/preferencias_usuario/preferencias_usuario.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +16,11 @@ import 'package:formvalidation/src/models/producto_model.dart';
 import '../utils/utils.dart' as utils;
 
 class MensajesProvider {
-
+  var pagesMuro=0;
+  var limit=10;
+  var _cargando = false;
+  List<MensajeModel> mensajesMiMuro = new List();
+  var lenghtMimuro=1;
   final String _url = '${utils.url}/api/sec';
   final _prefs = new PreferenciasUsuario();
 
@@ -158,10 +164,6 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
   
 
 
-
-    
-   
-
     final respData = json.decode(response.body);
     print( respData);
   
@@ -183,7 +185,8 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
   
 
   }
-  
+
+
 
 
 
@@ -216,34 +219,48 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
 
   }*/
 
-    Future<List<MensajeModel>> cargarMimuro() async {
+    Future<List<MensajeModel>> cargarMimuro(MensajeModel men) async {
+     
+    if(men!=null){
+      mensajesMiMuro.forEach((f){
+          if(f.id==men.id){f=men;}
 
-    final url  = '$_url/mimuro?access_token=${ _prefs.token }';
+      }
+
+      );
+      return mensajesMiMuro;
+      
+
+    }  
+    if(lenghtMimuro==mensajesMiMuro.length){}else{
+    _cargando = true;
+    pagesMuro++; 
+    final url  = '$_url/mimuro?access_token=${ _prefs.token }&page=$pagesMuro&limit=$limit';
     final resp = await http.get(url);
 
-    final List<dynamic> decodedData = json.decode(resp.body);
-    final List<MensajeModel> mensajes = new List();
-
-
-    if ( decodedData == null ) return [];
+    final Map<String,dynamic> decodedData = json.decode(resp.body);
     
+    if ( decodedData['items'] == null ) return [];
+
+    
+    lenghtMimuro=decodedData['total_count'];
 
 
-    decodedData.forEach( (mens){
+    decodedData['items'].forEach( (mens){
 
       final prodTemp = MensajeModel.fromJson(mens);
       
       print(prodTemp.imageName);
       
       print(prodTemp.id);
-      mensajes.add( prodTemp );
+      mensajesMiMuro.add( prodTemp );
 
     });
 
     // print( productos[0].id );
-
-    return mensajes;
-
+    _cargando = false;
+    return mensajesMiMuro;
+    }
   }
   
   Future<List<MensajeModel>> cargarMensajesUsuarios(int usuario) async {
@@ -252,11 +269,11 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
     final resp = await http.get(url);
 
     final List<dynamic> decodedData = json.decode(resp.body);
-    final List<MensajeModel> mensajes = new List();
+    
 
     print(decodedData);
     if ( decodedData == null ) return [];
-
+    final List<MensajeModel> mensajes = new List();
 
 
     decodedData.forEach( (mens){
@@ -275,7 +292,7 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
     return mensajes;
 
   }
-    Future<bool> darMeGusta(int id) async {
+    Future<bool> darMeGusta(int id,String how) async {
       
     /*final llamado = Uri.https(_url, '/busquedas/usuarios?access_token=${_prefs.token}', {
       'busqueda':query
@@ -289,7 +306,16 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
     );
     
     final decodedData = json.decode(resp.body);
-    print(decodedData);
+    switch (how){
+      case 'miMuro':{cargarMimuro(MensajeModel.fromJson(decodedData[0]));
+      }
+      break;
+      case 'misMensajes':
+      break;
+      case 'mensajesUsuario':
+      break;
+
+    }
     
     return true;
 
@@ -302,11 +328,11 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
     final resp = await http.get(url);
 
     final List<dynamic> decodedData = json.decode(resp.body);
-    final List<MensajeModel> mensajes = new List();
 
 
     if ( decodedData == null ) return [];
     
+    final List<MensajeModel> mensajes = new List();
 
 
     decodedData.forEach( (mens){

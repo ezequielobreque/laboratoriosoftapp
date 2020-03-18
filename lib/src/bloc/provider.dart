@@ -4,14 +4,11 @@ import 'package:formvalidation/src/bloc/login_bloc.dart';
 import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 export 'package:formvalidation/src/bloc/login_bloc.dart';
 
-import 'package:formvalidation/src/bloc/productos_bloc.dart';
-export 'package:formvalidation/src/bloc/productos_bloc.dart';
 
 
 class Provider extends InheritedWidget {
 
   final loginBloc      = new LoginBloc();
-  final _productosBloc = new ProductosBloc();
   final _mensajesBloc = new MensajesBloc();
   final _misMensajesBloc = new MisMensajesBloc();
 
@@ -56,9 +53,5 @@ static MensajesUsuariosBloc mensajesUsuariosBloc ( BuildContext context ){
    return context.dependOnInheritedWidgetOfExactType<Provider>()._mensajesUsuariosBloc;
 }
 
-
-  static ProductosBloc productosBloc ( BuildContext context ) {
-    return context.dependOnInheritedWidgetOfExactType<Provider>()._productosBloc;
-  }
 
 }

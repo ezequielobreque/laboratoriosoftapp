@@ -1,5 +1,7 @@
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/pages/home_page.dart';
 import 'package:formvalidation/src/pages/mi_perfil_page.dart';
@@ -7,10 +9,43 @@ import 'package:formvalidation/src/pages/tabbed_pad.dart';
 import 'package:formvalidation/src/search/search_delegate.dart';
 
 
-class TabbedAppBarDemo extends StatelessWidget {
+class TabbedAppBarDemo extends StatefulWidget {
+  
+   
+
+
+
+   
+  @override
+  _TabbedAppBarDemoState createState() => _TabbedAppBarDemoState();
+}
+
+
+
+
+class _TabbedAppBarDemoState extends State<TabbedAppBarDemo> {
+  @override   
+  void initState() {
+    super.initState();
+     
+              
+  }    
+       
+      @override   
+      void dispose() 
+      {    
+         super.dispose();     
+       
+      }
+  
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    
+   final mensajesBloc = Provider.mensajesBloc(context);
+    mensajesBloc.cargarMensajes();
    
     return DefaultTabController(
 
@@ -51,7 +86,7 @@ class TabbedAppBarDemo extends StatelessWidget {
           
           body: TabBarView(
             children: [
-              HomePage(),
+              HomePage(mensajesBloc: mensajesBloc,),
               MiPerfilPage(),
               Container(),
               Icon(Icons.directions_bike),

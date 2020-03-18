@@ -8,20 +8,25 @@ import 'package:rxdart/rxdart.dart';
 
 class MisMensajesBloc{
 
-  final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>();
+final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>();
+
   final _mensajesProvider   = new MensajesProvider();
 
   final _cargandoController  = new BehaviorSubject<bool>();
-  Stream<List<MensajeModel>> get mensajesStream => _mensajesControllerMisMensajes.stream;
-   void cargarMisMensajes() async {
 
+  Stream<List<MensajeModel>> get mensajesStream => _mensajesControllerMisMensajes.stream;
+  
+  Stream<bool> get cargando => _cargandoController.stream;
+  
+   void cargarMisMensajes() async {
+    
     final mensajes = await _mensajesProvider.cargarMisMensajes();
     _mensajesControllerMisMensajes.sink.add( mensajes );
   }
   void darMeGusta(int id) async {
 
     _cargandoController.sink.add(true);
-    await _mensajesProvider.darMeGusta(id);
+    await _mensajesProvider.darMeGusta(id,'misMensajes');
     _cargandoController.sink.add(false);
 
   }
@@ -43,17 +48,23 @@ class MensajesBloc {
   final _mensajesProvider   = new MensajesProvider();
 
 
-  Stream<List<MensajeModel>> get productosStream => _mensajesControllerMensajes.stream;
+  Stream<List<MensajeModel>> get mensajesStream => _mensajesControllerMensajes.stream;
   
   Stream<bool> get cargando => _cargandoController.stream;
-
+  var m=0;
 
 
   void cargarMensajes() async {
+    
+    final mensajes = await _mensajesProvider.cargarMimuro(null);
+    if(mensajes.length==m){
 
-    final mensajes = await _mensajesProvider.cargarMimuro();
+    }else{
+     m=mensajes.length; 
     _mensajesControllerMensajes.sink.add( mensajes );
+    }
   }
+   
 
   
 
@@ -68,7 +79,7 @@ class MensajesBloc {
   void darMeGusta(int id) async {
 
     _cargandoController.sink.add(true);
-    await _mensajesProvider.darMeGusta(id);
+    await _mensajesProvider.darMeGusta(id,'miMuro');
     _cargandoController.sink.add(false);
 
   }
@@ -112,7 +123,9 @@ class MensajesUsuariosBloc{
   final _mensajesProvider   = new MensajesProvider();
 
   final _cargandoController  = new BehaviorSubject<bool>();
+
   Stream<List<MensajeModel>> get mensajesStream => _mensajesControllerMensajesUsuarios.stream;
+  
    void cargarMensajesUsuarios(int id) async {
 
     final mensajes = await _mensajesProvider.cargarMensajesUsuarios(id);
@@ -121,7 +134,7 @@ class MensajesUsuariosBloc{
   void darMeGusta(int id) async {
 
     _cargandoController.sink.add(true);
-    await _mensajesProvider.darMeGusta(id);
+    await _mensajesProvider.darMeGusta(id,'mensajesUsuario');
     _cargandoController.sink.add(false);
 
   }

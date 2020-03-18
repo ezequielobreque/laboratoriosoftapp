@@ -48,8 +48,7 @@ class MyApp extends StatelessWidget {
         routes: {
           'login'    : ( BuildContext context ) => LoginPage(),
           'registro' : ( BuildContext context ) => RegistroPage(),
-          'home'     : ( BuildContext context ) => HomePage(),
-          'mensaje' : ( BuildContext context ) => MensajePage(),
+          
           'miperfil' :( BuildContext context ) => MiPerfilPage(),
           'tapped' :(BuildContext context)=>TabbedAppBarDemo(),
           'usuariosmegusta' :(BuildContext context)=>UsuariosMeGustaPage(),
