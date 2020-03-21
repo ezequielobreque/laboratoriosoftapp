@@ -17,10 +17,16 @@ import '../utils/utils.dart' as utils;
 
 class MensajesProvider {
   var pagesMuro=0;
+  var pagesUsuarios=0;
+  var pagesMiPerfil=0;
   var limit=10;
   var _cargando = false;
   List<MensajeModel> mensajesMiMuro = new List();
+  List<MensajeModel> mensajesMiPerfil = new List();
+  List<MensajeModel> mensajesUsuarios = new List();
   var lenghtMimuro=1;
+  var lenghtUsuarios=1;
+  var lenghtMiPerfil=1;
   final String _url = '${utils.url}/api/sec';
   final _prefs = new PreferenciasUsuario();
 
@@ -240,7 +246,6 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
 
     final Map<String,dynamic> decodedData = json.decode(resp.body);
     
-    if ( decodedData['items'] == null ) return [];
 
     
     lenghtMimuro=decodedData['total_count'];
@@ -255,7 +260,7 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
       print(prodTemp.id);
       mensajesMiMuro.add( prodTemp );
 
-    });
+    } );
 
     // print( productos[0].id );
     _cargando = false;
@@ -264,32 +269,35 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
   }
   
   Future<List<MensajeModel>> cargarMensajesUsuarios(int usuario) async {
+    
+    if(lenghtMimuro==mensajesUsuarios.length){}else{
 
-    final url  = '$_url/${usuario}/mensajes?access_token=${ _prefs.token }';
+    final url  = '$_url/${usuario}/mensajes?access_token=${ _prefs.token }&page=$pagesUsuarios&limit=$limit';
     final resp = await http.get(url);
 
-    final List<dynamic> decodedData = json.decode(resp.body);
+    final Map<String,dynamic> decodedData = json.decode(resp.body);
     
 
     print(decodedData);
-    if ( decodedData == null ) return [];
-    final List<MensajeModel> mensajes = new List();
+    
+    lenghtUsuarios=decodedData['total_count'];
 
 
-    decodedData.forEach( (mens){
+    decodedData['items'].forEach( (mens){
 
       final prodTemp = MensajeModel.fromJson(mens);
       
       print(prodTemp.imageName);
       
       print(prodTemp.id);
-      mensajes.add( prodTemp );
+      mensajesUsuarios.add( prodTemp );
 
     });
 
     // print( productos[0].id );
 
-    return mensajes;
+    return mensajesUsuarios;
+    }
 
   }
     Future<bool> darMeGusta(int id,String how) async {

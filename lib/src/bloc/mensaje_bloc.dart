@@ -13,6 +13,7 @@ final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>()
   final _mensajesProvider   = new MensajesProvider();
 
   final _cargandoController  = new BehaviorSubject<bool>();
+    var m=0;
 
   Stream<List<MensajeModel>> get mensajesStream => _mensajesControllerMisMensajes.stream;
   
@@ -21,7 +22,12 @@ final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>()
    void cargarMisMensajes() async {
     
     final mensajes = await _mensajesProvider.cargarMisMensajes();
+     if(mensajes.length==m){
+
+    }else{
+        m=mensajes.length; 
     _mensajesControllerMisMensajes.sink.add( mensajes );
+    }
   }
   void darMeGusta(int id) async {
 
@@ -123,13 +129,18 @@ class MensajesUsuariosBloc{
   final _mensajesProvider   = new MensajesProvider();
 
   final _cargandoController  = new BehaviorSubject<bool>();
-
+    var m=0;
   Stream<List<MensajeModel>> get mensajesStream => _mensajesControllerMensajesUsuarios.stream;
   
    void cargarMensajesUsuarios(int id) async {
 
     final mensajes = await _mensajesProvider.cargarMensajesUsuarios(id);
+       if(mensajes.length==m){
+
+    }else{
+      m=mensajes.length; 
     _mensajesControllerMensajesUsuarios.sink.add( mensajes );
+    }
   }
   void darMeGusta(int id) async {
 
