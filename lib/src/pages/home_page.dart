@@ -13,9 +13,6 @@ class HomePage extends StatelessWidget {
 final MensajesBloc mensajesBloc;
 
 HomePage({@required this.mensajesBloc});
-
-  
-
   @override
   Widget build(BuildContext context) {
     

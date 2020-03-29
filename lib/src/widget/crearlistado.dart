@@ -140,14 +140,14 @@ class _CrearListadoState extends State<CrearListado> {
                       
                     
                     onPressed:(){
-                     darMeGusta(mensaje.id);
-                    
-                    
-                     
+                      setState(() {
+                        
+                       darMeGusta(mensaje.id);
+                         
+                      });
+
                     },
 
-                  
-                  
                       ),
                     VerticalDivider()
                       ,

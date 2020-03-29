@@ -27,8 +27,8 @@ class _TabbedAppBarDemoState extends State<TabbedAppBarDemo> {
   @override   
   void initState() {
     super.initState();
-     
-              
+      
+            
   }    
        
       @override   
@@ -44,9 +44,10 @@ class _TabbedAppBarDemoState extends State<TabbedAppBarDemo> {
 
   @override
   Widget build(BuildContext context) {
-   final mensajesBloc = Provider.mensajesBloc(context);
-    mensajesBloc.cargarMensajes();
-   
+ 
+  
+final mensajes= Provider.mensajesBloc(context);
+mensajes.cargarMensajes();
     return DefaultTabController(
 
         length: 4,
@@ -86,7 +87,7 @@ class _TabbedAppBarDemoState extends State<TabbedAppBarDemo> {
           
           body: TabBarView(
             children: [
-              HomePage(mensajesBloc: mensajesBloc,),
+              HomePage(mensajesBloc: mensajes),
               MiPerfilPage(),
               Container(),
               Icon(Icons.directions_bike),

@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/models/mensaje_model.dart';
@@ -24,9 +25,9 @@ class MensajesProvider {
   List<MensajeModel> mensajesMiMuro = new List();
   List<MensajeModel> mensajesMiPerfil = new List();
   List<MensajeModel> mensajesUsuarios = new List();
-  var lenghtMimuro=1;
-  var lenghtUsuarios=1;
-  var lenghtMiPerfil=1;
+  var lenghtMimuro=-1;
+  var lenghtUsuarios=-1;
+  var lenghtMiPerfil=-1;
   final String _url = '${utils.url}/api/sec';
   final _prefs = new PreferenciasUsuario();
 
@@ -228,16 +229,23 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
     Future<List<MensajeModel>> cargarMimuro(MensajeModel men) async {
      
     if(men!=null){
-      mensajesMiMuro.forEach((f){
-          if(f.id==men.id){f=men;}
+      print(mensajesMiMuro[0].meGustas.users.length);
+      var i=-1;
+      mensajesMiMuro.asMap().forEach((index,value){
+          if(value.id==men.id){
+            i=index;
+             
+            }
 
       }
 
       );
+      mensajesMiMuro[i]=men;
+      print(mensajesMiMuro[0].meGustas.users.length);
       return mensajesMiMuro;
       
 
-    }  
+    }else{  
     if(lenghtMimuro==mensajesMiMuro.length){}else{
     _cargando = true;
     pagesMuro++; 
@@ -265,13 +273,34 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
     // print( productos[0].id );
     _cargando = false;
     return mensajesMiMuro;
-    }
+    }}
   }
   
-  Future<List<MensajeModel>> cargarMensajesUsuarios(int usuario) async {
+  Future<List<MensajeModel>> cargarMensajesUsuarios(int usuario,MensajeModel men) async {
     
-    if(lenghtMimuro==mensajesUsuarios.length){}else{
+      if(men!=null){
+      print(mensajesUsuarios[0].meGustas.users.length);
+      var i=-1;
+      mensajesMiMuro.asMap().forEach((index,value){
+          if(value.id==men.id){
+            i=index;
+             
+            }
 
+      }
+
+      );
+      mensajesUsuarios[i]=men;
+      print(mensajesUsuarios[i].meGustas.users.length);
+      return mensajesUsuarios;
+      
+
+    }else{
+
+
+    if(lenghtUsuarios==mensajesUsuarios.length){}else{
+       _cargando = true;
+    pagesUsuarios++; 
     final url  = '$_url/${usuario}/mensajes?access_token=${ _prefs.token }&page=$pagesUsuarios&limit=$limit';
     final resp = await http.get(url);
 
@@ -295,19 +324,16 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
     });
 
     // print( productos[0].id );
-
+    _cargando = false;
     return mensajesUsuarios;
     }
-
+    }
   }
-    Future<bool> darMeGusta(int id,String how) async {
+    Future<List<MensajeModel>> darMeGusta(int id,String how,int usuario) async {
       
     /*final llamado = Uri.https(_url, '/busquedas/usuarios?access_token=${_prefs.token}', {
       'busqueda':query
     });*/
-    
-
-
     final resp = await http.post(
       
       _url+'/megusta/${id}?access_token=${_prefs.token}',
@@ -315,49 +341,84 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
     
     final decodedData = json.decode(resp.body);
     switch (how){
-      case 'miMuro':{cargarMimuro(MensajeModel.fromJson(decodedData[0]));
+      case 'miMuro':{
+       
+      return  cargarMimuro(MensajeModel.fromJson(decodedData[0])); 
       }
       break;
       case 'misMensajes':
+      {
+       
+      return  cargarMisMensajes(MensajeModel.fromJson(decodedData[0])); 
+      }
       break;
       case 'mensajesUsuario':
+      {
+       
+      return  cargarMensajesUsuarios(usuario,MensajeModel.fromJson(decodedData[0])); 
+
+      
+      }
       break;
 
     }
-    
-    return true;
+
 
   }
   
 
-    Future<List<MensajeModel>> cargarMisMensajes() async {
+    Future<List<MensajeModel>> cargarMisMensajes(MensajeModel men) async {
+       
+    if(men!=null){
+      print(mensajesMiPerfil[0].meGustas.users.length);
+      var i=-1;
+      mensajesMiPerfil.asMap().forEach((index,value){
+          if(value.id==men.id){
+            i=index;
+             
+            }
 
-    final url  = '$_url/mismensajes?access_token=${ _prefs.token }';
+      }
+
+      );
+      mensajesMiPerfil[i]=men;
+      print(mensajesMiPerfil[0].meGustas.users.length);
+      return mensajesMiPerfil;
+      
+
+    }else{  
+
+
+      if(lenghtMiPerfil==mensajesMiPerfil.length){}else{
+          _cargando = true;
+    pagesMiPerfil++; 
+    final url  = '$_url/mismensajes?access_token=${ _prefs.token }&page=$pagesMiPerfil&limit=$limit';
     final resp = await http.get(url);
 
-    final List<dynamic> decodedData = json.decode(resp.body);
-
-
-    if ( decodedData == null ) return [];
+   final Map<String,dynamic> decodedData = json.decode(resp.body);
     
-    final List<MensajeModel> mensajes = new List();
+
+    print(decodedData);
+    
+    lenghtMiPerfil=decodedData['total_count'];
 
 
-    decodedData.forEach( (mens){
+    decodedData['items'].forEach( (mens){
 
       final prodTemp = MensajeModel.fromJson(mens);
       
       print(prodTemp.imageName);
       
       print(prodTemp.id);
-      mensajes.add( prodTemp );
+      mensajesMiPerfil.add( prodTemp );
 
     });
 
     // print( productos[0].id );
-
-    return mensajes;
-
+    _cargando=false;
+    return mensajesMiPerfil;
+      }
+  }
   }
 
 

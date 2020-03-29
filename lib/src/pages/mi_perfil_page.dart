@@ -19,7 +19,8 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
     
     final misMensajesBloc = Provider.misMensajesBloc(context);
     misMensajesBloc.cargarMisMensajes();
-
+    
+   
     return Scaffold(
       
       
@@ -29,7 +30,12 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
   }
 
   Widget _crearListado(MisMensajesBloc misMensajesBloc ) {
-    
+    final _pageController=new ScrollController();
+
+      _pageController.addListener((){        
+      if (_pageController.position.pixels == _pageController.position.maxScrollExtent) 
+      {         misMensajesBloc.cargarMisMensajes();       }      
+      });   
     return StreamBuilder(
       stream: misMensajesBloc.mensajesStream,
       builder: (BuildContext context, AsyncSnapshot<List<MensajeModel>> snapshot){
@@ -40,7 +46,7 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
           final productos = snapshot.data;
 
           return ListView.builder(
-            
+            controller: _pageController,
             itemCount: productos.length,
             itemBuilder: (context, i) => _crearItem(context, misMensajesBloc, productos[i] ),
           );

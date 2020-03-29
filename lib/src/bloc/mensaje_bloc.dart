@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:formvalidation/src/models/mensaje_model.dart';
 import 'package:formvalidation/src/providers/mensajes_provider.dart';
 import 'package:rxdart/rxdart.dart';
@@ -21,7 +22,7 @@ final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>()
   
    void cargarMisMensajes() async {
     
-    final mensajes = await _mensajesProvider.cargarMisMensajes();
+    final mensajes = await _mensajesProvider.cargarMisMensajes(null);
      if(mensajes.length==m){
 
     }else{
@@ -32,7 +33,8 @@ final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>()
   void darMeGusta(int id) async {
 
     _cargandoController.sink.add(true);
-    await _mensajesProvider.darMeGusta(id,'misMensajes');
+    await _mensajesProvider.darMeGusta(id,'misMensajes',0);
+    
     _cargandoController.sink.add(false);
 
   }
@@ -52,6 +54,7 @@ class MensajesBloc {
   final _cargandoController  = new BehaviorSubject<bool>();
 
   final _mensajesProvider   = new MensajesProvider();
+  
 
 
   Stream<List<MensajeModel>> get mensajesStream => _mensajesControllerMensajes.stream;
@@ -60,14 +63,14 @@ class MensajesBloc {
   var m=0;
 
 
-  void cargarMensajes() async {
+   void cargarMensajes() async {
     
     final mensajes = await _mensajesProvider.cargarMimuro(null);
     if(mensajes.length==m){
 
     }else{
      m=mensajes.length; 
-    _mensajesControllerMensajes.sink.add( mensajes );
+    _mensajesControllerMensajes.sink.add(mensajes);
     }
   }
    
@@ -82,18 +85,27 @@ class MensajesBloc {
     _cargandoController.sink.add(false);
 
   }
-  void darMeGusta(int id) async {
+ void darMeGusta(int id) async {
 
-    _cargandoController.sink.add(true);
-    await _mensajesProvider.darMeGusta(id,'miMuro');
-    _cargandoController.sink.add(false);
+    
+   final mensajes=await _mensajesProvider.darMeGusta(id,'miMuro',0);
+ 
+    _mensajesControllerMensajes.sink.add(mensajes);
+  //  mensajes.insert(0, men1);
+  //_mensajesControllerMensajes.sink.add(mensajes);
+   // final list= new List<MensajeModel>();
+   // list.add(men1);
+   
+    
 
+    
+  
   }
 
   Future<String> subirFoto( File foto ) async {
 
     _cargandoController.sink.add(true);
-    final fotoUrl = await _mensajesProvider.subirImagen(foto);
+    final fotoUrl = await _mensajesProvider.subirImagen(foto,);
     _cargandoController.sink.add(false);
 
     return fotoUrl;
@@ -127,14 +139,13 @@ class MensajesUsuariosBloc{
 
   final _mensajesControllerMensajesUsuarios = new BehaviorSubject<List<MensajeModel>>();
   final _mensajesProvider   = new MensajesProvider();
-
   final _cargandoController  = new BehaviorSubject<bool>();
     var m=0;
   Stream<List<MensajeModel>> get mensajesStream => _mensajesControllerMensajesUsuarios.stream;
   
    void cargarMensajesUsuarios(int id) async {
 
-    final mensajes = await _mensajesProvider.cargarMensajesUsuarios(id);
+    final mensajes = await _mensajesProvider.cargarMensajesUsuarios(id,null);
        if(mensajes.length==m){
 
     }else{
@@ -142,10 +153,10 @@ class MensajesUsuariosBloc{
     _mensajesControllerMensajesUsuarios.sink.add( mensajes );
     }
   }
-  void darMeGusta(int id) async {
+  void darMeGusta(int id,int usuario) async {
 
     _cargandoController.sink.add(true);
-    await _mensajesProvider.darMeGusta(id,'mensajesUsuario');
+    await _mensajesProvider.darMeGusta(id,'mensajesUsuario',usuario);
     _cargandoController.sink.add(false);
 
   }

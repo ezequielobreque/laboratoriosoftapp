@@ -1,10 +1,5 @@
 
-import 'package:flutter/material.dart';
-
-
-
-
-/*import 'dart:io';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -363,5 +358,3 @@ class _MensajePageState extends State<MensajePage> {
 }
 
 
-
-*/
