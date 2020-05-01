@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
+import 'package:formvalidation/src/pages/Settings.dart';
 import 'package:formvalidation/src/pages/home_page.dart';
 import 'package:formvalidation/src/pages/mi_perfil_page.dart';
 import 'package:formvalidation/src/pages/tabbed_pad.dart';
@@ -90,7 +91,7 @@ mensajes.cargarMensajes();
               HomePage(mensajesBloc: mensajes),
               MiPerfilPage(),
               Container(),
-              Icon(Icons.directions_bike),
+              SettingsPage(),
             ]
 
           ),

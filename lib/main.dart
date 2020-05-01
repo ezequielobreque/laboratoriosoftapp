@@ -12,39 +12,40 @@ import 'package:formvalidation/src/pages/registro_page.dart';
 import 'package:formvalidation/src/pages/usuarios_megusta_page.dart';
 import 'package:formvalidation/src/preferencias_usuario/preferencias_usuario.dart';
 import 'package:formvalidation/src/preferencias_usuario/usuario.dart';
+import 'package:formvalidation/src/utils/utils.dart' as utils;
 
 void main() async {
   
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = new PreferenciasUsuario();
   await prefs.initPrefs();
+  var initialRoute=await utils.fijarse();
+  runApp(MyApp(initialRoute: initialRoute));
+    
 
-  runApp(MyApp());
-    
-    
 
 }
  
 class MyApp extends StatelessWidget {
   
+final String initialRoute;
+
+MyApp({@required this.initialRoute});
   @override
   Widget build(BuildContext context) {
-  
+     
     final prefs = new PreferenciasUsuario();
     print( prefs.token );
-
-    var _initialRoute= (prefs.token!=null && prefs.token!='')? 'tapped':'login';
-
+   
     
     print(prefs.usuarioApp);
-    print(userApp());
     
     return Provider(
       child: MaterialApp(
         
         debugShowCheckedModeBanner: false,
         title: 'Material App',
-        initialRoute: _initialRoute,
+        initialRoute: 'login',
         routes: {
           'login'    : ( BuildContext context ) => LoginPage(),
           'registro' : ( BuildContext context ) => RegistroPage(),

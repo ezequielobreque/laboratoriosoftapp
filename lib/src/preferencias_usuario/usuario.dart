@@ -12,10 +12,10 @@ import 'package:formvalidation/src/preferencias_usuario/preferencias_usuario.dar
 UserModel _user;
 final _prefs = new PreferenciasUsuario();
 UserModel userApp(){
-    if(_prefs.usuarioApp!=null){
+    if(_prefs.usuarioApp!=null &&_prefs.usuarioApp!=[] ){
     _user= userModelFromJson(_prefs.usuarioApp);
     return _user;
-    }else
-    return null;
+    }else{
+    return null;}
 
   }

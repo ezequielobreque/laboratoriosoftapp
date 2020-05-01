@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
+import 'package:formvalidation/src/preferencias_usuario/preferencias_usuario.dart';
+import 'package:http/http.dart' as http;
 bool isNumeric( String s ) {
 
   if ( s.isEmpty ) return false;
@@ -104,3 +108,43 @@ crearFondo(BuildContext context, String fondo){
     );
 
   }
+
+
+  cerrarSesion(BuildContext context){
+      final _prefs = new PreferenciasUsuario();
+    _prefs.token=null;
+    _prefs.usuarioApp=[];
+    Navigator.pushReplacementNamed(context, 'login');
+
+
+  }
+
+
+Future<String> fijarse() async {
+   String initialRoute;
+  final _prefs = new PreferenciasUsuario();
+  if  (_prefs.token!=null && _prefs.token!=''){
+    initialRoute='tapped';
+    }else{
+    initialRoute='login';
+    }
+   
+    if(initialRoute!='login'){
+      final resp = await http.post(
+      '${url}/api/sec/usuario?access_token=${_prefs.token}');
+      final dynamic decodedData = json.decode(resp.body);
+      
+      print(decodedData);
+      if (decodedData['error']=="invalid_grant"){
+      
+     return "login";
+        
+
+      }else{
+        return "tapped";
+      }
+
+    }else{
+    return "tapped";
+    }
+}
