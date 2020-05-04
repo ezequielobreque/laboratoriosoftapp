@@ -45,7 +45,7 @@ MyApp({@required this.initialRoute});
         
         debugShowCheckedModeBanner: false,
         title: 'Material App',
-        initialRoute: 'login',
+        initialRoute: initialRoute,
         routes: {
           'login'    : ( BuildContext context ) => LoginPage(),
           'registro' : ( BuildContext context ) => RegistroPage(),
