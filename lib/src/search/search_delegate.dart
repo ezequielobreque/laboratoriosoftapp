@@ -99,7 +99,7 @@ class DataSearch extends SearchDelegate {
                     onTap: (){
                       close( context, null);
                       
-                      Navigator.pushNamed(context, 'perfilUsuario', arguments: user);
+                      Navigator.pushNamed(context, 'perfilusuario', arguments: user);
                     },
                   );
               }).toList()

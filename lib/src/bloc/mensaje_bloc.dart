@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:formvalidation/src/models/mensaje_model.dart';
+import 'package:formvalidation/src/models/user_model.dart';
 import 'package:formvalidation/src/providers/mensajes_provider.dart';
+import 'package:formvalidation/src/providers/usuario_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 
@@ -22,7 +23,7 @@ final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>()
   
    void cargarMisMensajes() async {
     
-    final mensajes = await _mensajesProvider.cargarMisMensajes(null);
+    final mensajes = await _mensajesProvider.cargarMisMensajes(null,false);
      if(mensajes.length==m){
 
     }else{
@@ -30,6 +31,20 @@ final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>()
     _mensajesControllerMisMensajes.sink.add( mensajes );
     }
   }
+
+    void destroy() async{
+     _mensajesControllerMisMensajes.drain();
+     m=0;
+    final mensajes = await _mensajesProvider.cargarMisMensajes(null,true);
+    if(mensajes.length==m){
+
+    }else{
+     m=mensajes.length; 
+    _mensajesControllerMisMensajes.sink.add(mensajes);
+    }
+    }
+      
+
   void darMeGusta(int id) async {
 
     _cargandoController.sink.add(true);
@@ -43,6 +58,82 @@ final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>()
     _mensajesControllerMisMensajes?.close();
     }
 }
+
+class ConosidosBloc{
+
+final _personasController = new BehaviorSubject<List<UserModel>>();
+
+final _usuariosProvider   = new UsuarioProvider();
+
+final _cargandoController  = new BehaviorSubject<bool>();
+    var m=0;
+
+  Stream<List<UserModel>> get conocidostream => _personasController.stream;
+  
+  Stream<bool> get cargando => _cargandoController.stream;
+  
+   void conocido() async {
+    
+    final usuarios = await _usuariosProvider.conocidos(false);
+     if(usuarios.length==m){
+
+    }else{
+        m=usuarios.length; 
+    _personasController.sink.add( usuarios );
+    }
+  }
+     void destroid() async{
+     _personasController.drain();
+     m=0;
+     final usuarios = await _usuariosProvider.conocidos(true);
+     if(usuarios.length==m){
+       if(usuarios.length==0){
+         _personasController.drain();
+       }
+
+    }else{
+        m=usuarios.length;
+        print('la m $m'); 
+    _personasController.sink.add( usuarios );
+    }
+      
+   }
+
+    dispose() {
+   _personasController?.close();
+    }
+}
+
+class AmigosBloc{
+
+final _personasController = new BehaviorSubject<List<UserModel>>();
+
+final _usuariosProvider   = new UsuarioProvider();
+
+final _cargandoController  = new BehaviorSubject<bool>();
+    var m=0;
+
+  Stream<List<UserModel>> get conocidostream => _personasController.stream;
+  
+  Stream<bool> get cargando => _cargandoController.stream;
+  
+   void amigos() async {
+    
+    final usuarios = await _usuariosProvider.amigos();
+     if(usuarios.length==m){
+
+    }else{
+        m=usuarios.length; 
+    _personasController.sink.add( usuarios );
+    }
+  }
+
+    dispose() {
+   _personasController?.close();
+    }
+}
+
+
 
 
 
@@ -65,7 +156,7 @@ class MensajesBloc {
 
    void cargarMensajes() async {
     
-    final mensajes = await _mensajesProvider.cargarMimuro(null);
+    final mensajes = await _mensajesProvider.cargarMimuro(null,false);
     if(mensajes.length==m){
 
     }else{
@@ -74,6 +165,18 @@ class MensajesBloc {
     }
   }
    
+   void destroid() async{
+     _mensajesControllerMensajes.drain();
+     m=0;
+    final mensajes = await _mensajesProvider.cargarMimuro(null,true);
+    if(mensajes.length==m){
+
+    }else{
+     m=mensajes.length; 
+    _mensajesControllerMensajes.sink.add(mensajes);
+    }
+      
+   }
 
   
 
@@ -85,6 +188,7 @@ class MensajesBloc {
     _cargandoController.sink.add(false);
 
   }
+  
  void darMeGusta(int id) async {
 
     
@@ -121,10 +225,10 @@ class MensajesBloc {
 
   }
 
-  void borrarProducto( String id ) async {
-
+  void borrarMensaje( int id ) async {
+    _cargandoController.sink.add(true);
     await _mensajesProvider.borrarMensaje(id);
-
+    _cargandoController.sink.add(false);
   }
 
 
@@ -153,11 +257,12 @@ class MensajesUsuariosBloc{
     _mensajesControllerMensajesUsuarios.sink.add( mensajes );
     }
   }
-  void darMeGusta(int id,int usuario) async {
+  void darMeGusta(int id) async {
 
-    _cargandoController.sink.add(true);
-    await _mensajesProvider.darMeGusta(id,'mensajesUsuario',usuario);
-    _cargandoController.sink.add(false);
+    final mensajes= await _mensajesProvider.darMeGusta(id,'mensajesUsuario',0);
+  
+ 
+    _mensajesControllerMensajesUsuarios.sink.add(mensajes);
 
   }
 

@@ -226,8 +226,12 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
 
   }*/
 
-    Future<List<MensajeModel>> cargarMimuro(MensajeModel men) async {
-     
+    Future<List<MensajeModel>> cargarMimuro(MensajeModel men,bool volver) async {
+     if (volver==true){
+       pagesMuro=0;
+       lenghtMimuro=-1;
+      mensajesMiMuro= new List();
+     }
     if(men!=null){
       print(mensajesMiMuro[0].meGustas.users.length);
       var i=-1;
@@ -281,7 +285,7 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
       if(men!=null){
       print(mensajesUsuarios[0].meGustas.users.length);
       var i=-1;
-      mensajesMiMuro.asMap().forEach((index,value){
+      mensajesUsuarios.asMap().forEach((index,value){
           if(value.id==men.id){
             i=index;
              
@@ -329,6 +333,11 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
     }
     }
   }
+
+ 
+
+
+
     Future<List<MensajeModel>> darMeGusta(int id,String how,int usuario) async {
       
     /*final llamado = Uri.https(_url, '/busquedas/usuarios?access_token=${_prefs.token}', {
@@ -343,13 +352,13 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
     switch (how){
       case 'miMuro':{
        
-      return  cargarMimuro(MensajeModel.fromJson(decodedData[0])); 
+      return  cargarMimuro(MensajeModel.fromJson(decodedData[0]),false); 
       }
       break;
       case 'misMensajes':
       {
        
-      return  cargarMisMensajes(MensajeModel.fromJson(decodedData[0])); 
+      return  cargarMisMensajes(MensajeModel.fromJson(decodedData[0]),false); 
       }
       break;
       case 'mensajesUsuario':
@@ -367,8 +376,13 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
   }
   
 
-    Future<List<MensajeModel>> cargarMisMensajes(MensajeModel men) async {
-       
+    Future<List<MensajeModel>> cargarMisMensajes(MensajeModel men,bool volver) async {
+      if (volver==true){
+       pagesMiPerfil=0;
+      mensajesMiPerfil= new List();
+      lenghtMiPerfil=-1;
+     }
+
     if(men!=null){
       print(mensajesMiPerfil[0].meGustas.users.length);
       var i=-1;
@@ -422,10 +436,10 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
   }
 
 
-  Future<int> borrarMensaje( String id ) async { 
+  Future<int> borrarMensaje( int id ) async { 
 
-    final url  = '$_url/productos/$id.json?auth=${ _prefs.token }';
-    final resp = await http.delete(url);
+    final url  = '$_url/eliminarMensaje/$id?access_token=${ _prefs.token }';
+    final resp = await http.get(url);
 
     print( resp.body );
 

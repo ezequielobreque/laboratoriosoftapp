@@ -10,45 +10,24 @@ import 'package:formvalidation/src/pages/tabbed_pad.dart';
 import 'package:formvalidation/src/search/search_delegate.dart';
 
 
-class TabbedAppBarDemo extends StatefulWidget {
-  
-   
 
 
 
-   
-  @override
-  _TabbedAppBarDemoState createState() => _TabbedAppBarDemoState();
-}
-
-
-
-
-class _TabbedAppBarDemoState extends State<TabbedAppBarDemo> {
-  @override   
-  void initState() {
-    super.initState();
-      
-            
-  }    
-       
-      @override   
-      void dispose() 
-      {    
-         super.dispose();     
-       
-      }
-  
-
+class TabbedAppBarDemo extends StatelessWidget {
 
 
 
   @override
   Widget build(BuildContext context) {
- 
-  
-final mensajes= Provider.mensajesBloc(context);
-mensajes.cargarMensajes();
+    
+    
+    
+    final mensajes= Provider.mensajesBloc(context);
+    final usuarios= Provider.conocidosBloc(context);
+    final misMensajesBloc = Provider.misMensajesBloc(context);
+       mensajes.cargarMensajes();
+    usuarios.conocido();
+    misMensajesBloc.cargarMisMensajes();
     return DefaultTabController(
 
         length: 4,
@@ -88,8 +67,8 @@ mensajes.cargarMensajes();
           
           body: TabBarView(
             children: [
-              HomePage(mensajesBloc: mensajes),
-              MiPerfilPage(),
+              HomePage(mensajesBloc: mensajes,conosidosBloc: usuarios,),
+              MiPerfilPage(misMensajesBloc:misMensajesBloc),
               Container(),
               SettingsPage(),
             ]

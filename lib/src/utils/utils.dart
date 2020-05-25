@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:formvalidation/src/models/user_model.dart';
 
 import 'package:formvalidation/src/preferencias_usuario/preferencias_usuario.dart';
+import 'package:formvalidation/src/providers/usuario_provider.dart';
 import 'package:http/http.dart' as http;
 bool isNumeric( String s ) {
 
@@ -14,6 +17,7 @@ bool isNumeric( String s ) {
 
 }
 
+List<UserModel> seguidos= new List();
 String url= 'http://192.168.100.104:8000';
 
 
@@ -123,10 +127,11 @@ crearFondo(BuildContext context, String fondo){
 Future<String> fijarse() async {
    String initialRoute;
   final _prefs = new PreferenciasUsuario();
-  if  (_prefs.token!=null && _prefs.token!=''){
-    initialRoute='tapped';
-    }else{
+  if  (_prefs.token==null){
     initialRoute='login';
+    
+    }else{
+    initialRoute='tapped';
     }
    
     if(initialRoute!='login'){
@@ -141,10 +146,16 @@ Future<String> fijarse() async {
         
 
       }else{
+        
+      
         return "tapped";
       }
 
     }else{
-    return "tapped";
+    return "login";
     }
 }
+  misSeguidos() async {
+  seguidos=await UsuarioProvider().amigos();
+  print('mis seguidos:${seguidos}');
+  }

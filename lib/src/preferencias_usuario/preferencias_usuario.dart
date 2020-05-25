@@ -33,7 +33,7 @@ class PreferenciasUsuario {
 
   // GET y SET de la última página
   get token {
-    return _prefs.getString('token') ?? '';
+    return _prefs.getString('token') ?? null;
   }
 
   set token( String value ) {

@@ -1,75 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
-import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/models/mensaje_model.dart';
-import 'package:formvalidation/src/preferencias_usuario/usuario.dart';
+import 'package:formvalidation/src/models/user_model.dart';
 import 'package:formvalidation/src/utils/utils.dart' as utils;
-import 'package:formvalidation/src/widget/iniciousuario.dart';
+class CrearItem extends StatefulWidget {
+   BuildContext context; 
+  MensajesUsuariosBloc productosBloc;
+  MensajeModel mensaje;
+  UserModel user;
+  CrearItem({@required this.context,@required this.productosBloc,@required this.mensaje,@required this.user });
 
-class MiPerfilPage extends StatefulWidget {
-  MisMensajesBloc misMensajesBloc;
-  MiPerfilPage({@required this.misMensajesBloc});
   @override
-  _MiPerfilPageState createState() => _MiPerfilPageState();
+  _CrearItemState createState() => _CrearItemState();
 }
 
-class _MiPerfilPageState extends State<MiPerfilPage> {
+class _CrearItemState extends State<CrearItem> {
+  
+  
   @override
   Widget build(BuildContext context) {
-    
-    final misMensajesBloc = widget.misMensajesBloc;
-    
-   
-    return Scaffold(
-      body:Stack(children: <Widget>[
-      utils.crearFondo(context,null),
-      
-      _crearListado(misMensajesBloc)
-      ]),
-      floatingActionButton: _crearBoton( context ),
-    );
-  }
-
-  Widget _crearListado(MisMensajesBloc misMensajesBloc ) {
-    final _pageController=new ScrollController();
-
-      _pageController.addListener((){        
-      if (_pageController.position.pixels == _pageController.position.maxScrollExtent) 
-      {         misMensajesBloc.cargarMisMensajes();       }      
-      });   
-    return StreamBuilder(
-      stream: misMensajesBloc.mensajesStream,
-      builder: (BuildContext context, AsyncSnapshot<List<MensajeModel>> snapshot){
-        
-        
-        if ( snapshot.hasData ) {
-
-          final productos = snapshot.data;
-
-          return RefreshIndicator(
-            child: ListView.builder( 
-              controller: _pageController,
-              itemCount: productos.length+1,
-              itemBuilder: (context, i) =>(i==0)?
-                
-              InicioUsuario(user: userApp(),context:context,yo:true): _crearItem(context, misMensajesBloc, productos[i-1] ),
-            ),
-            onRefresh: refresh,
-          );
-
-        } else {
-          return Center( child: CircularProgressIndicator());
-        }
-      },
-    );
-
-  }
-
-  Widget _crearItem(BuildContext context, MisMensajesBloc productosBloc, MensajeModel mensaje ) {
     var variable=false;
+    final context=widget.context; 
+ final productosBloc=widget.productosBloc;
+  final mensaje=widget.mensaje;
+  final user=widget.user;
+
     for ( var item in mensaje.meGustas.users  ) {
-      if (item.id==userApp().id){variable=true;}
+      if (item.id==user.id){variable=true;}
     };
     return GestureDetector(
 
@@ -154,7 +112,7 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
 
                   FlatButton.icon(
                     
-                   onPressed: (){Navigator.pushNamed(context, 'usuariosmegusta', arguments: mensaje  );},
+                   onPressed: (){Navigator.pushNamed(context, 'usuariosmegusta', arguments: mensaje );},
                   color: Colors.black12,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                           
@@ -173,26 +131,7 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
 
         ),
     ));
-  
-    
-
-
-    
-
-  }
-
-  _crearBoton(BuildContext context){
-    return FloatingActionButton(
-      child: Icon( Icons.add ),
-      backgroundColor: Colors.deepPurple,
-      onPressed: ()=> Navigator.pushNamed(context, 'mensaje'),
-    );
-  }
- Future<void> refresh()async {
-    setState(() {
-      widget.misMensajesBloc.destroy();
-    });
-
-    return null;
   }
 }
+
+

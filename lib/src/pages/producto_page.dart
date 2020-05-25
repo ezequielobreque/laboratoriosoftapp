@@ -10,6 +10,7 @@ import 'package:formvalidation/src/preferencias_usuario/usuario.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:formvalidation/src/utils/utils.dart' as utils;
+import 'package:toast/toast.dart';
 
 
 
@@ -31,15 +32,15 @@ class _MensajePageState extends State<MensajePage> {
   bool fx=true;
   var _user=userApp();
   @override
+  
   Widget build(BuildContext context) {
-
     mensajesBloc = Provider.mensajesBloc(context);
-
-
     final MensajeModel prodData = ModalRoute.of(context).settings.arguments;
     if ( prodData != null ) {
       mensaje = prodData;
     }
+    bool editar=false;
+    if (prodData!=null){editar=true;}
     
     return Scaffold(
       key: scaffoldKey,
@@ -60,9 +61,7 @@ class _MensajePageState extends State<MensajePage> {
 
        children:<Widget>[ 
         utils.crearFondo(context,null),
-        _container(context)
-      
-      
+        _container(context,editar)
       ]),
       /*body: SingleChildScrollView(
         child: Container(
@@ -86,7 +85,7 @@ class _MensajePageState extends State<MensajePage> {
 
   }
 
-  Widget _container(BuildContext context) {
+  Widget _container(BuildContext context,bool editar) {
     
     final size = MediaQuery.of(context).size;
     return SingleChildScrollView(
@@ -121,11 +120,14 @@ class _MensajePageState extends State<MensajePage> {
             child: Column(
               children: <Widget>[
                 _mostrarNombre(),
+                
+                Container(height: 3),
                 _crearInformacion(),
-
-                _crearBotonSacarFoto(),
                 _mostrarFoto(),
+      
+                
                 _crearBotonDePublicacion(),
+                (editar==true)?_crearBotonEliminar():Container(),
               ],
             ),
           ),
@@ -142,27 +144,19 @@ class _MensajePageState extends State<MensajePage> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.0),
       child: Row(
-      
+
       children: <Widget>[
-      CircleAvatar(
-        
-        
+      CircleAvatar(    
         child: ClipRRect(
-          
           borderRadius: BorderRadius.circular(20.0),
           child: Image(image: NetworkImage("${utils.url}/imagenes/user/"+userApp().imageName),
-        
-        
         )
-        
         ),
-  
       ),
       Text('  '+_user.username[0].toUpperCase()+_user.username.substring(1),style: TextStyle(
       fontSize: 20.0
       ),
-      ),
-  
+      ),  
       ],
 
       ),
@@ -178,11 +172,9 @@ class _MensajePageState extends State<MensajePage> {
     return Container(
       padding:  EdgeInsets.symmetric(horizontal: 20.0),
           child: TextFormField(
-            
         initialValue: mensaje.informacion,
         textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
-         
           border:OutlineInputBorder(),
           hintText: '¿En que estas pensando?',
             ),
@@ -235,16 +227,22 @@ class _MensajePageState extends State<MensajePage> {
 
 
   Widget _crearBotonDePublicacion() {
-    return RaisedButton.icon(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0)
-      ),
-      color: Colors.deepPurple,
-      textColor: Colors.white,
-      label: Text('Guardar'),
-      icon: Icon( Icons.save ),
-      onPressed: ( _guardando ) ? null : _submit,
-    );
+    
+      
+     
+      return RaisedButton.icon(
+        
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0)
+        ),
+        color: Colors.deepPurple,
+        textColor: Colors.white,
+        label: Text('Guardar'),
+        icon: Icon( Icons.save ),
+        onPressed: ( _guardando ) ? null : _submit,
+      );
+  
+    
   }
 
   void _submit() async {
@@ -262,16 +260,18 @@ class _MensajePageState extends State<MensajePage> {
 
     if ( mensaje.id == null ) {
       mensajesBloc.crearMensaje(mensaje,foto);
+      Toast.show("Mensaje posteado !!", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
     } else {
       mensajesBloc.editarMensaje(mensaje,foto);
+      Toast.show("Mensaje editado !!", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
     }
 
 
     setState(() {_guardando = false; 
     
-    mostrarSnackbar('Registro guardado');});
+    });
 
-    Navigator.pushNamed(context,'tapped');
+    Navigator.pop(context);
 
   }
 
@@ -293,24 +293,43 @@ class _MensajePageState extends State<MensajePage> {
     if ( mensaje.imageName != null ) {
     
     
-      
-      return FadeInImage(
+    return  Stack(alignment: Alignment.topRight,
+      children: <Widget>[
+      FadeInImage(
         image: NetworkImage( "${utils.url}/imagenes/mensaje/"+mensaje.imageName ),
         placeholder: AssetImage('assets/jar-loading.gif'),
        width: double.maxFinite,
         fit: BoxFit.contain,
-      );
-    
+      ),
+      
+      _crearBotonSacarFoto(),]);
       
     } else {
       if(fx!=false){
-      return Image(
+       return Container(
+         child:(foto==null)?unRow():
+      
+        Stack(alignment: Alignment.topRight,
+                  children: <Widget>[
+        Image(
         image: new FileImage(new File( foto?.path ?? 'assets/no-image.png')),
         
         fit: BoxFit.contain,
 
-      );
-      }else{return Container();}
+      ),
+      _crearBotonSacarFoto(),
+                
+      ])
+         
+       ); 
+     /* (foto!=null)?
+      Image(
+        image: new FileImage(new File( foto?.path ?? 'assets/no-image.png')),
+        
+        fit: BoxFit.contain,
+
+      )*/
+      }else{return unRow();}
     }
 
   }
@@ -320,7 +339,32 @@ class _MensajePageState extends State<MensajePage> {
     _procesarImagen( ImageSource.gallery );
 
   }
-  
+  Widget unRow(){
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+
+          Container(
+            
+            child: IconButton(
+              
+              iconSize: 50,
+              icon: Icon( Icons.photo_size_select_actual ),
+              onPressed: _seleccionarFoto,
+            ),
+          ),
+        
+          Container(
+            
+            child: IconButton(
+              iconSize: 50,
+              icon: Icon( Icons.camera_alt ),
+              onPressed: _tomarFoto,
+            ),
+          ),
+      ],
+      );
+  }
   
   _tomarFoto() async {
 
@@ -349,12 +393,33 @@ class _MensajePageState extends State<MensajePage> {
       color: Colors.red,
       
       
-      icon:Icon(FontAwesomeIcons.cross),
+      icon:Icon(FontAwesomeIcons.times,size: 30,),
       onPressed: (){setState((){fx=false; mensaje.imageName=null;});}
     );
  }
+Widget  _crearBotonEliminar() {
+        return RaisedButton.icon(
+        
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0)
+        ),
+        color: Colors.red,
+        textColor: Colors.white,
+        label: Text('Eliminar'),
+        icon: Icon( Icons.delete ),
+        onPressed: (){
+          mensajesBloc.borrarMensaje(mensaje.id);
+
+          Navigator.pop(context);
+        } ,
+      );
+  
+    
+}
 
 
 }
+
+
 
 

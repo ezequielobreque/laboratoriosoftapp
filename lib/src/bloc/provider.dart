@@ -8,11 +8,13 @@ export 'package:formvalidation/src/bloc/login_bloc.dart';
 
 class Provider extends InheritedWidget {
 
-  final loginBloc      = new LoginBloc();
+  final loginBloc     = new LoginBloc();
   final _mensajesBloc = new MensajesBloc();
   final _misMensajesBloc = new MisMensajesBloc();
 
   final _mensajesUsuariosBloc = new MensajesUsuariosBloc();
+  
+  final _conocidosBloc = new ConosidosBloc();
 
 
   static Provider _instancia;
@@ -51,6 +53,12 @@ class Provider extends InheritedWidget {
 }
 static MensajesUsuariosBloc mensajesUsuariosBloc ( BuildContext context ){
    return context.dependOnInheritedWidgetOfExactType<Provider>()._mensajesUsuariosBloc;
+}
+static ConosidosBloc conocidosBloc ( BuildContext context ){
+   return context.dependOnInheritedWidgetOfExactType<Provider>()._conocidosBloc;
+}
+static ConosidosBloc amigosBloc ( BuildContext context ){
+   return context.dependOnInheritedWidgetOfExactType<Provider>()._conocidosBloc;
 }
 
 
