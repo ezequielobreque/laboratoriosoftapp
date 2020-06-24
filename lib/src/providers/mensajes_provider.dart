@@ -43,6 +43,10 @@ class MensajesProvider {
   
 
   final url = Uri.parse('$_url/crearmensaje?access_token=${_prefs.token}');
+  
+  String latitud;
+  String longitud;
+  if (mensaje.latitud==null){latitud='null';longitud='null';}else{latitud=mensaje.latitud.toString();longitud=mensaje.longitud.toString();}
     if (imagen!=null){
     final mimeType = mime(imagen.path).split('/'); //image/jpeg
 
@@ -59,6 +63,8 @@ class MensajesProvider {
 
     var request = http.MultipartRequest('POST', url)
         ..fields['informacion'] = mensaje.informacion
+        ..fields['latitud']=longitud
+        ..fields['longitud']=latitud
         ..files.add(await http.MultipartFile.fromPath(
       'imagefile',
       imagen.path,
@@ -77,15 +83,15 @@ if (response.statusCode == 200) print('Uploaded!');
     if ( resp.statusCode != 200 && resp.statusCode != 201 ) {
       print('Algo salio mal');
       print( resp.body );
-      return null;
+      return true;
     }
   
     final respData = json.decode(resp.body);
     print( respData);
   
-    return respData['id'];
+    return true;
   }else{
-var response = await http.post(url,body:{"informacion": mensaje.informacion});
+var response = await http.post(url,body:{"informacion": mensaje.informacion,"latitud":latitud,"longitud":longitud});
   
 
 
@@ -96,7 +102,7 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
     final respData = json.decode(response.body);
     print( respData);
   
-    return respData['id'];
+    return true;
   }
 
 
@@ -125,6 +131,9 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
     
 
   final url = Uri.parse('$_url/editarmensaje/${mensaje.id}?access_token=${_prefs.token}');
+  String latitud;
+  String longitud;
+  if (mensaje.latitud==null){latitud='null';longitud='null';}else{latitud=mensaje.latitud.toString();longitud=mensaje.longitud.toString();}
 if(imagen!=null){
 
     final mimeType = mime(imagen.path).split('/'); //image/jpeg
@@ -140,6 +149,8 @@ if(imagen!=null){
     imageUploadRequest.files.add(file);*/
     var request = http.MultipartRequest('POST', url)
         ..fields['informacion'] = mensaje.informacion
+        ..fields['latitud']=longitud
+        ..fields['longitud']=latitud
         ..files.add(await http.MultipartFile.fromPath(
       'imagefile',
       imagen.path,
@@ -158,23 +169,28 @@ if (response.statusCode == 200) print('Uploaded!');
     if ( resp.statusCode != 200 && resp.statusCode != 201 ) {
       print('Algo salio mal');
       print( resp.body );
-      return null;
+      return true;
     }
 
     final respData = json.decode(resp.body);
     print( respData);
 
-    return respData['id'];
+    return true;
 }else{
-
-var response = await http.post(url,body:{"informacion": mensaje.informacion});
+  var image='';
+  print(mensaje.imageName==null);
+  if(mensaje.imageName==null){image='null';}
+  print('estoy apunto de editar');
+  print(latitud);
+  print(longitud);
+var response = await http.post(url,body:{"informacion": mensaje.informacion,"imagename":image,"latitud":latitud,"longitud":longitud});
   
 
-
+    print('pase por aca para la edicion');
     final respData = json.decode(response.body);
     print( respData);
   
-    return respData['id'];
+    return true;
 
 
 }
@@ -233,7 +249,7 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
       mensajesMiMuro= new List();
      }
     if(men!=null){
-      print(mensajesMiMuro[0].meGustas.users.length);
+      print(mensajesMiMuro.length);
       var i=-1;
       mensajesMiMuro.asMap().forEach((index,value){
           if(value.id==men.id){
@@ -245,7 +261,7 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
 
       );
       mensajesMiMuro[i]=men;
-      print(mensajesMiMuro[0].meGustas.users.length);
+      print(mensajesMiMuro[i].meGustas.users.length);
       return mensajesMiMuro;
       
 
@@ -280,9 +296,16 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
     }}
   }
   
-  Future<List<MensajeModel>> cargarMensajesUsuarios(int usuario,MensajeModel men) async {
-    
+  Future<List<MensajeModel>> cargarMensajesUsuarios(int usuario,MensajeModel men,bool volver) async {
+      if (volver==true){
+       pagesUsuarios=0;
+       lenghtUsuarios=-1;
+      mensajesUsuarios= new List();
+     }
+
+
       if(men!=null){
+      
       print(mensajesUsuarios[0].meGustas.users.length);
       var i=-1;
       mensajesUsuarios.asMap().forEach((index,value){
@@ -364,7 +387,7 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
       case 'mensajesUsuario':
       {
        
-      return  cargarMensajesUsuarios(usuario,MensajeModel.fromJson(decodedData[0])); 
+      return  cargarMensajesUsuarios(usuario,MensajeModel.fromJson(decodedData[0]),false); 
 
       
       }
@@ -404,7 +427,7 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
 
 
       if(lenghtMiPerfil==mensajesMiPerfil.length){}else{
-          _cargando = true;
+     _cargando = true;
     pagesMiPerfil++; 
     final url  = '$_url/mismensajes?access_token=${ _prefs.token }&page=$pagesMiPerfil&limit=$limit';
     final resp = await http.get(url);
@@ -427,7 +450,6 @@ var response = await http.post(url,body:{"informacion": mensaje.informacion});
       mensajesMiPerfil.add( prodTemp );
 
     });
-
     // print( productos[0].id );
     _cargando=false;
     return mensajesMiPerfil;

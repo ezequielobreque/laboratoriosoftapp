@@ -3,6 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/models/mensaje_model.dart';
 import 'package:formvalidation/src/models/user_model.dart';
+import 'package:formvalidation/src/pages/mapa_page.dart';
+import 'package:formvalidation/src/pages/producto_page.dart';
 import 'package:formvalidation/src/utils/utils.dart' as utils;
 class CrearItem extends StatefulWidget {
    BuildContext context; 
@@ -30,8 +32,11 @@ class _CrearItemState extends State<CrearItem> {
       if (item.id==user.id){variable=true;}
     };
     return GestureDetector(
-
-          onTap: () => Navigator.pushNamed(context, 'mensaje', arguments: mensaje ),
+           onTap:(){
+       Navigator.push(
+              context,
+        MaterialPageRoute(builder:(context)=>MensajePage(mensajemod:mensaje)));
+       },
           child: Container(
               margin: EdgeInsets.symmetric(horizontal: 10.0,vertical: 10.0),
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0 ),
@@ -66,7 +71,17 @@ class _CrearItemState extends State<CrearItem> {
                 backgroundColor: Colors.transparent,
               ),
                  
-                Text('  ${ mensaje.user.username }',style: TextStyle(fontSize: 22.0))
+                Row(children:<Widget>[Text('  ${ mensaje.user.username }',style: TextStyle(fontSize: 22.0)),
+                 mensaje.latitud==null?Container():
+                  FlatButton.icon(
+                     icon: Icon(Icons.map,color: Colors.grey,), 
+                   onPressed: (){
+                  Navigator.push(
+                         context,
+                     MaterialPageRoute(builder:(context)=>MapaPage(mensaje: mensaje,)));
+                     },
+       
+                  label: Text('ubicacion',style: TextStyle(color: Colors.grey),))] ),
                 ]
                 ),
                 subtitle: Text( mensaje.informacion,style: TextStyle(fontSize: 18.5,color: Color.fromRGBO(44, 62, 80,1.0)), ),

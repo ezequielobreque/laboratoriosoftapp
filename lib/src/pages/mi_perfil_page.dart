@@ -3,9 +3,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/models/mensaje_model.dart';
+import 'package:formvalidation/src/pages/producto_page.dart';
 import 'package:formvalidation/src/preferencias_usuario/usuario.dart';
 import 'package:formvalidation/src/utils/utils.dart' as utils;
+import 'package:formvalidation/src/widget/crearpost.dart';
 import 'package:formvalidation/src/widget/iniciousuario.dart';
+
+import 'mapa_page.dart';
 
 class MiPerfilPage extends StatefulWidget {
   MisMensajesBloc misMensajesBloc;
@@ -20,14 +24,12 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
     
     final misMensajesBloc = widget.misMensajesBloc;
     
-   
     return Scaffold(
       body:Stack(children: <Widget>[
       utils.crearFondo(context,null),
       
       _crearListado(misMensajesBloc)
       ]),
-      floatingActionButton: _crearBoton( context ),
     );
   }
 
@@ -40,7 +42,7 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
       });   
     return StreamBuilder(
       stream: misMensajesBloc.mensajesStream,
-      builder: (BuildContext context, AsyncSnapshot<List<MensajeModel>> snapshot){
+      builder: (BuildContext context, AsyncSnapshot<List> snapshot){
         
         
         if ( snapshot.hasData ) {
@@ -50,16 +52,16 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
           return RefreshIndicator(
             child: ListView.builder( 
               controller: _pageController,
-              itemCount: productos.length+1,
+              itemCount: productos.length+2,
               itemBuilder: (context, i) =>(i==0)?
                 
-              InicioUsuario(user: userApp(),context:context,yo:true): _crearItem(context, misMensajesBloc, productos[i-1] ),
+              InicioUsuario(user: userApp(),context:context,yo:true):(i==1)?crearPost(context,true,this): _crearItem(context, misMensajesBloc, productos[i-2] ),
             ),
             onRefresh: refresh,
           );
 
-        } else {
-          return Center( child: CircularProgressIndicator());
+        } else {return ListView(children: <Widget>[InicioUsuario(user: userApp(),context:context,yo:true),crearPost(context,true,this),]);
+     
         }
       },
     );
@@ -73,7 +75,11 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
     };
     return GestureDetector(
 
-          onTap: () => Navigator.pushNamed(context, 'mensaje', arguments: mensaje ),
+           onTap:(){
+                Navigator.push(
+                    context,
+                   MaterialPageRoute(builder:(context)=>MensajePage(mensajemod: mensaje,))).then((value){refresh();});
+              },
           child: Container(
               margin: EdgeInsets.symmetric(horizontal: 10.0,vertical: 10.0),
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0 ),
@@ -107,8 +113,37 @@ class _MiPerfilPageState extends State<MiPerfilPage> {
                    :AssetImage('assets/perfil-no-image.jpg'),
                 backgroundColor: Colors.transparent,
               ),
-                 
-                Text('  ${ mensaje.user.username }',style: TextStyle(fontSize: 22.0))
+                Row(
+                     crossAxisAlignment:  CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Column(
+                            
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children:<Widget>[ Text('  ${ mensaje.user.username }',style: TextStyle(fontSize: 22.0)),
+                          Text('  ${mensaje.fechaHora.hour}:${mensaje.fechaHora.minute}',style: TextStyle(fontSize: 15.0),),
+                          
+                          
+                          ]),
+                         
+                      Column(
+                        
+                        children:<Widget>[
+                            
+                            mensaje.latitud==null?Container():
+                           FlatButton.icon(
+                            icon: Icon(Icons.map,color: Colors.grey,size: 17,), 
+                        onPressed: (){
+                        Navigator.push(
+                                context,
+                            MaterialPageRoute(builder:(context)=>MapaPage(mensaje: mensaje,)));
+                            },
+            
+                        label: Text('ubicacion',style: TextStyle(color: Colors.grey,fontSize: 17),)),
+                          ]
+                         ),
+                                ]
+                      ), 
+              
                 ]
                 ),
                 subtitle: Text( mensaje.informacion,style: TextStyle(fontSize: 18.5,color: Color.fromRGBO(44, 62, 80,1.0)), ),

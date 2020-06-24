@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
+import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/models/user_model.dart';
+import 'package:formvalidation/src/pages/home_page.dart';
 
 import 'package:formvalidation/src/preferencias_usuario/preferencias_usuario.dart';
 import 'package:formvalidation/src/providers/usuario_provider.dart';
@@ -17,8 +20,9 @@ bool isNumeric( String s ) {
 
 }
 
+bool recienInicie=true;
 List<UserModel> seguidos= new List();
-String url= 'http://192.168.100.104:8000';
+String url= 'http://192.168.0.10:80';
 
 
 
@@ -114,12 +118,15 @@ crearFondo(BuildContext context, String fondo){
   }
 
 
-  cerrarSesion(BuildContext context){
-      final _prefs = new PreferenciasUsuario();
+  cerrarSesion(BuildContext context,ConosidosBloc conosidosBloc,MensajesBloc mensajesBloc,MisMensajesBloc misMensajesBloc){
+    final _prefs = new PreferenciasUsuario();
     _prefs.token=null;
     _prefs.usuarioApp=[];
+    mensajesBloc.drenar();
+    conosidosBloc.drenar();
+    misMensajesBloc.drenar();
+    /*bool recienInicie=true;*/                                                                                                                                        
     Navigator.pushReplacementNamed(context, 'login');
-
 
   }
 

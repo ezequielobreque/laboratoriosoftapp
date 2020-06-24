@@ -11,23 +11,47 @@ import 'package:formvalidation/src/search/search_delegate.dart';
 
 
 
+class TabbedAppBarDemo extends StatefulWidget {
 
+  @override
+  _TabbedAppBarDemoState createState() => _TabbedAppBarDemoState();
+}
 
-class TabbedAppBarDemo extends StatelessWidget {
-
+class _TabbedAppBarDemoState extends State<TabbedAppBarDemo> {
+  MensajesBloc mensajes;
+  ConosidosBloc usuarios;
+  MisMensajesBloc misMensajesBloc;
+  int contador=0;
+  void didChangeDependencies() {
+    mensajes= Provider.mensajesBloc(context);
+    usuarios= Provider.conocidosBloc(context);
+    misMensajesBloc = Provider.misMensajesBloc(context);
+     
+ 
+    super.didChangeDependencies();
+  }
+  
+ /* @override
+  void initState() {
+    mensajes.destroid();
+    usuarios.destroid();
+    misMensajesBloc.destroy();
+    super.initState();
+  }*/
 
 
   @override
   Widget build(BuildContext context) {
-    
-    
-    
-    final mensajes= Provider.mensajesBloc(context);
-    final usuarios= Provider.conocidosBloc(context);
-    final misMensajesBloc = Provider.misMensajesBloc(context);
-       mensajes.cargarMensajes();
-    usuarios.conocido();
-    misMensajesBloc.cargarMisMensajes();
+   var variable= ModalRoute.of(context).settings.arguments;
+    (variable==null)?null:contador=variable;
+    if(contador==0){
+     
+    mensajes.destroid();
+    usuarios.destroid();
+    misMensajesBloc.destroy();
+    contador=contador+1;
+    }
+   
     return DefaultTabController(
 
         length: 4,
@@ -47,10 +71,10 @@ class TabbedAppBarDemo extends StatelessWidget {
                   Tab(icon: Icon(Icons.home)),
                   Tab(icon: Icon(FontAwesomeIcons.userAlt)),
                   Tab(icon:IconButton(iconSize: 30,icon: Icon(Icons.search),
-                                  onPressed: () {
-                                showSearch(context: context, delegate: DataSearch());
-                              },
-                            ),
+                     onPressed: () {
+                     showSearch(context: context, delegate: DataSearch());
+                  },
+                  ),
                   ),
                         
                     
@@ -70,7 +94,7 @@ class TabbedAppBarDemo extends StatelessWidget {
               HomePage(mensajesBloc: mensajes,conosidosBloc: usuarios,),
               MiPerfilPage(misMensajesBloc:misMensajesBloc),
               Container(),
-              SettingsPage(),
+              SettingsPage(misMensajesBloc:misMensajesBloc,mensajesBloc: mensajes,conosidosBloc: usuarios,),
             ]
 
           ),
@@ -78,5 +102,6 @@ class TabbedAppBarDemo extends StatelessWidget {
       );
     
   }
+
 }
  

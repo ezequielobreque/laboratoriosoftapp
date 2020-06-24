@@ -13,6 +13,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
           utils.crearFondo(context,'Login de usuario'),
@@ -169,7 +170,7 @@ class LoginPage extends StatelessWidget {
     Map info = await usuarioProvider.login(bloc.email, bloc.password);
 
     if ( info['ok'] ) {
-       Navigator.pushReplacementNamed(context, 'tapped');
+       Navigator.pushReplacementNamed(context, 'tapped',arguments: 0);
     } else {
       
       utils.mostrarAlerta( context, info['mensaje'] );

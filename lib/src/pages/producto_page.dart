@@ -11,11 +11,13 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:formvalidation/src/utils/utils.dart' as utils;
 import 'package:toast/toast.dart';
+import 'package:geolocator/geolocator.dart';
 
 
 
 class MensajePage extends StatefulWidget {
-
+MensajeModel mensajemod;
+ MensajePage({@required this.mensajemod});
   @override
   _MensajePageState createState() => _MensajePageState();
 }
@@ -27,21 +29,33 @@ class _MensajePageState extends State<MensajePage> {
   
   MensajesBloc mensajesBloc;
   MensajeModel mensaje = new MensajeModel();
-  bool _guardando = false;
+  bool _guardando;
   File foto;
-  bool fx=true;
+  Position position;
+  bool fx;
+  bool lugar;
+  bool editar;
   var _user=userApp();
+  @override
+  void initState() {
+    _guardando = false;
+    fx=true;
+    lugar=false;
+    print(widget.mensajemod);
+    final MensajeModel prodData = widget.mensajemod;
+    if ( prodData != null ) {
+      mensaje = prodData;
+    }
+    editar=false;
+    if (prodData!=null){editar=true;}
+    mensaje.latitud!=null?lugar=true:lugar=false;
+    super.initState();
+  }
+
   @override
   
   Widget build(BuildContext context) {
     mensajesBloc = Provider.mensajesBloc(context);
-    final MensajeModel prodData = ModalRoute.of(context).settings.arguments;
-    if ( prodData != null ) {
-      mensaje = prodData;
-    }
-    bool editar=false;
-    if (prodData!=null){editar=true;}
-    
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -124,9 +138,10 @@ class _MensajePageState extends State<MensajePage> {
                 Container(height: 3),
                 _crearInformacion(),
                 _mostrarFoto(),
+                _crearBotonLocalizacion(),
       
-                
                 _crearBotonDePublicacion(),
+                
                 (editar==true)?_crearBotonEliminar():Container(),
               ],
             ),
@@ -148,8 +163,10 @@ class _MensajePageState extends State<MensajePage> {
       children: <Widget>[
       CircleAvatar(    
         child: ClipRRect(
+          
           borderRadius: BorderRadius.circular(20.0),
-          child: Image(image: NetworkImage("${utils.url}/imagenes/user/"+userApp().imageName),
+          child: Image(image:(userApp().imageName!=null)? NetworkImage("${utils.url}/imagenes/user/"+userApp().imageName):AssetImage('assets/perfil-no-image.jpg'),
+          
         )
         ),
       ),
@@ -254,6 +271,16 @@ class _MensajePageState extends State<MensajePage> {
     formKey.currentState.save();
 
     setState(() {_guardando = true; });
+    if (lugar==true){
+      
+      if(mensaje.latitud==null){
+        
+     await _traerposicion();
+     
+     mensaje.latitud=  position.latitude;
+     mensaje.longitud=  position.longitude;
+      }
+    }else{mensaje.longitud=null;mensaje.latitud=null;}
 
 
 
@@ -266,11 +293,8 @@ class _MensajePageState extends State<MensajePage> {
       Toast.show("Mensaje editado !!", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
     }
 
-
-    setState(() {_guardando = false; 
-    
-    });
-
+  
+   
     Navigator.pop(context);
 
   }
@@ -291,8 +315,7 @@ class _MensajePageState extends State<MensajePage> {
   Widget _mostrarFoto() {
 
     if ( mensaje.imageName != null ) {
-    
-    
+
     return  Stack(alignment: Alignment.topRight,
       children: <Widget>[
       FadeInImage(
@@ -300,10 +323,8 @@ class _MensajePageState extends State<MensajePage> {
         placeholder: AssetImage('assets/jar-loading.gif'),
        width: double.maxFinite,
         fit: BoxFit.contain,
-      ),
-      
-      _crearBotonSacarFoto(),]);
-      
+      ),      
+      _crearBotonSacarFoto(),]);      
     } else {
       if(fx!=false){
        return Container(
@@ -397,7 +418,7 @@ class _MensajePageState extends State<MensajePage> {
       onPressed: (){setState((){fx=false; mensaje.imageName=null;});}
     );
  }
-Widget  _crearBotonEliminar() {
+Widget  _crearBotonEliminar()  {
         return RaisedButton.icon(
         
         shape: RoundedRectangleBorder(
@@ -408,7 +429,7 @@ Widget  _crearBotonEliminar() {
         label: Text('Eliminar'),
         icon: Icon( Icons.delete ),
         onPressed: (){
-          mensajesBloc.borrarMensaje(mensaje.id);
+         mensajesBloc.borrarMensaje(mensaje.id);
 
           Navigator.pop(context);
         } ,
@@ -418,6 +439,38 @@ Widget  _crearBotonEliminar() {
 }
 
 
+
+ Widget _crearBotonLocalizacion(){
+ 
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+
+            Text('registar vista ',style: TextStyle(fontSize: 15),),
+            
+            
+            Icon( Icons.pin_drop ),
+            
+            Checkbox(
+                value: lugar, 
+                onChanged: (bool value) {setState(() {lugar=value;});},
+            ),
+        ],
+    );
+
+
+
+  
+          
+ }
+
+
+  _traerposicion() async {
+     
+  position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  
+  
+  }
 }
 
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/models/user_model.dart';
+import 'package:formvalidation/src/pages/perfil_usuario.dart';
 import 'package:formvalidation/src/providers/usuario_busquedas.dart';
 import 'package:formvalidation/src/utils/utils.dart' as utils;
 
@@ -98,8 +100,9 @@ class DataSearch extends SearchDelegate {
                     subtitle: Text( user.email),
                     onTap: (){
                       close( context, null);
-                      
-                      Navigator.pushNamed(context, 'perfilusuario', arguments: user);
+                      Navigator.push(
+              context,
+                      MaterialPageRoute(builder:(context)=>PerfilUsuarioPage(usuario:user)));
                     },
                   );
               }).toList()
@@ -115,7 +118,8 @@ class DataSearch extends SearchDelegate {
     );
 
 
-  }
+  }   
+
 
   // @override
   // Widget buildSuggestions(BuildContext context) {

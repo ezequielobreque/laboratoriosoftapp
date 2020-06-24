@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/models/user_model.dart';
+import 'package:formvalidation/src/pages/perfil_usuario.dart';
 import 'package:formvalidation/src/utils/utils.dart' as utils;
 
 
 class AmigosHorizontal extends StatefulWidget {
 
   final List<UserModel> personas;
-  final Function siguientePagina;
-
- AmigosHorizontal({ @required this.personas, @required this.siguientePagina });
+  ConosidosBloc conosidosBloc;
+  MensajesBloc mensajesBloc;
+ AmigosHorizontal({ @required this.personas, @required this.mensajesBloc ,@required this.conosidosBloc});
 
   @override
   _AmigosHorizontalState createState() => _AmigosHorizontalState();
 }
 
 class _AmigosHorizontalState extends State<AmigosHorizontal> {
+
+  
+
   final _pageController = new PageController(
     
     viewportFraction: 0.33
@@ -28,7 +33,7 @@ class _AmigosHorizontalState extends State<AmigosHorizontal> {
     _pageController.addListener( () {
 
       if ( _pageController.position.pixels >= _pageController.position.maxScrollExtent ){
-        widget.siguientePagina();
+        widget.conosidosBloc.conocido();
       }
 
     });
@@ -104,10 +109,21 @@ class _AmigosHorizontalState extends State<AmigosHorizontal> {
     return GestureDetector(
       child: tarjeta,
       onTap: (){
-      Navigator.pushNamed(context, 'perfilusuario', arguments: personas);
-
-      },
+       Navigator.push(
+              context,
+                      MaterialPageRoute(builder:(context)=>PerfilUsuarioPage(usuario:personas))).then((value){_handleRefresh();});
+                    },
     );
 
+  
+
+  }
+    Future<void> _handleRefresh()async {
+    setState(() {
+      widget.mensajesBloc.destroid();
+      widget.conosidosBloc.destroid();
+    });
+
+    return null;
   }
 }

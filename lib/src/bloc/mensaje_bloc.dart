@@ -10,7 +10,8 @@ import 'package:rxdart/rxdart.dart';
 
 class MisMensajesBloc{
 
-final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>();
+
+ final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>();
 
   final _mensajesProvider   = new MensajesProvider();
 
@@ -34,7 +35,7 @@ final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>()
 
     void destroy() async{
      _mensajesControllerMisMensajes.drain();
-     m=0;
+     m=-1;
     final mensajes = await _mensajesProvider.cargarMisMensajes(null,true);
     if(mensajes.length==m){
 
@@ -44,15 +45,25 @@ final _mensajesControllerMisMensajes = new BehaviorSubject<List<MensajeModel>>()
     }
     }
       
+  
 
   void darMeGusta(int id) async {
 
     _cargandoController.sink.add(true);
-    await _mensajesProvider.darMeGusta(id,'misMensajes',0);
+  final mensajes=await _mensajesProvider.darMeGusta(id,'misMensajes',0);
+ 
+   _mensajesControllerMisMensajes.sink.add(mensajes);
+
     
     _cargandoController.sink.add(false);
 
   }
+   drenar() {
+    _mensajesControllerMisMensajes.drain();
+    m=0;
+    _mensajesControllerMisMensajes.sink.add(null);
+    }
+
 
     dispose() {
     _mensajesControllerMisMensajes?.close();
@@ -84,7 +95,7 @@ final _cargandoController  = new BehaviorSubject<bool>();
   }
      void destroid() async{
      _personasController.drain();
-     m=0;
+     m=-1;
      final usuarios = await _usuariosProvider.conocidos(true);
      if(usuarios.length==m){
        if(usuarios.length==0){
@@ -98,6 +109,11 @@ final _cargandoController  = new BehaviorSubject<bool>();
     }
       
    }
+    drenar() {
+    _personasController.drain();
+    m=0;
+    _personasController.sink.add(null);
+    }
 
     dispose() {
    _personasController?.close();
@@ -127,6 +143,11 @@ final _cargandoController  = new BehaviorSubject<bool>();
     _personasController.sink.add( usuarios );
     }
   }
+   drenar() {
+   _personasController.drain();
+   m=0;
+   _personasController.sink.add(null);
+    }
 
     dispose() {
    _personasController?.close();
@@ -160,6 +181,9 @@ class MensajesBloc {
     if(mensajes.length==m){
 
     }else{
+      print('aca');
+       print('los mensajes $mensajes');
+       print('\n');
      m=mensajes.length; 
     _mensajesControllerMensajes.sink.add(mensajes);
     }
@@ -167,7 +191,7 @@ class MensajesBloc {
    
    void destroid() async{
      _mensajesControllerMensajes.drain();
-     m=0;
+     m=-1;
     final mensajes = await _mensajesProvider.cargarMimuro(null,true);
     if(mensajes.length==m){
 
@@ -178,15 +202,16 @@ class MensajesBloc {
       
    }
 
+
   
 
 
   void crearMensaje( MensajeModel mensaje ,File file) async {
-
-    _cargandoController.sink.add(true);
+   
+ 
     await _mensajesProvider.crearMensaje(mensaje,file);
-    _cargandoController.sink.add(false);
 
+ 
   }
   
  void darMeGusta(int id) async {
@@ -226,9 +251,17 @@ class MensajesBloc {
   }
 
   void borrarMensaje( int id ) async {
-    _cargandoController.sink.add(true);
+   
     await _mensajesProvider.borrarMensaje(id);
-    _cargandoController.sink.add(false);
+   
+  }
+
+  
+  drenar() {
+    _mensajesControllerMensajes.drain();
+    m=-1;
+    print('drene');
+    _mensajesControllerMensajes.sink.add(null);
   }
 
 
@@ -249,10 +282,11 @@ class MensajesUsuariosBloc{
   
    void cargarMensajesUsuarios(int id) async {
 
-    final mensajes = await _mensajesProvider.cargarMensajesUsuarios(id,null);
+    final mensajes = await _mensajesProvider.cargarMensajesUsuarios(id,null,false);
        if(mensajes.length==m){
 
     }else{
+      print('llege');
       m=mensajes.length; 
     _mensajesControllerMensajesUsuarios.sink.add( mensajes );
     }
@@ -265,6 +299,19 @@ class MensajesUsuariosBloc{
     _mensajesControllerMensajesUsuarios.sink.add(mensajes);
 
   }
+
+  void drenar(int id) async {
+    _mensajesControllerMensajesUsuarios.drain();
+    m=-1;
+      final mensajes = await  _mensajesProvider.cargarMensajesUsuarios(id,null,true);
+    if(mensajes.length==m){
+
+    }else{
+     m=mensajes.length; 
+     _mensajesControllerMensajesUsuarios.sink.add(mensajes);
+    }
+
+    }
 
     dispose() {
     _mensajesControllerMensajesUsuarios?.close();

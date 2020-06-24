@@ -3,6 +3,8 @@
 //     final client = clientFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:formvalidation/src/models/portada_model.dart';
+
 import '../utils/utils.dart' as utils;
 
 
@@ -39,17 +41,20 @@ class UserModel {
     String username;
     String email;
     String imageName;
+    PortadaModel portada;
 
     UserModel({
         this.id,
         this.username,
         this.email,
         this.imageName,
+        this.portada,
     });
 
     factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         id: json["id"],
         username: json["username"],
+        portada: PortadaModel.fromJson(json["_portada"]),
         email: json["email"],
         imageName: (json["image_name"]==null)? null : json["image_name"],
     );
@@ -61,6 +66,7 @@ class UserModel {
         "username": username,
         "email": email,
         "image_name": imageName,
+        "_portada":portada
     };
 
  /*   List<UserModel> crearUsuarios(List<Map<String, dynamic>> json){

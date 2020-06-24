@@ -41,7 +41,6 @@ MyApp({@required this.initialRoute});
    
     
     print(prefs.usuarioApp);
-    
     return Provider(
       child: MaterialApp(
         
@@ -51,11 +50,11 @@ MyApp({@required this.initialRoute});
         routes: {
           'login'    : ( BuildContext context ) => LoginPage(),
           'registro' : ( BuildContext context ) => RegistroPage(),
-          'mensaje' :(BuildContext context)=>MensajePage(),
+          
           'miperfil' :( BuildContext context ) => MiPerfilPage(),
           'tapped' :(BuildContext context)=>TabbedAppBarDemo(),
           'usuariosmegusta' :(BuildContext context)=>UsuariosMeGustaPage(),
-          'perfilusuario' :(BuildContext context)=>PerfilUsuarioPage(),
+         // 'perfilusuario' :(BuildContext context)=>PerfilUsuarioPage(),
         },
         theme: ThemeData(
           primaryColor: Colors.deepPurple,

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:formvalidation/src/bloc/mensaje_bloc.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
@@ -7,26 +6,21 @@ import 'package:formvalidation/src/pages/perfil_usuario.dart';
 import 'package:formvalidation/src/preferencias_usuario/usuario.dart';
 import 'package:formvalidation/src/utils/utils.dart' as utils;
 
-class UsuariosMeGustaPage extends StatelessWidget {
+class MisSeguidosPage extends StatefulWidget {
 
-  MensajesBloc mensajesBloc;
-    MensajeModel mensaje= new MensajeModel();
+  @override
+  _MisSeguidosPageState createState() => _MisSeguidosPageState();
+}
+
+class _MisSeguidosPageState extends State<MisSeguidosPage> {
   @override
   Widget build(BuildContext context) {
-        mensajesBloc = MensajesBloc();
-
-
-
-
-    final MensajeModel prodData = ModalRoute.of(context).settings.arguments;
-    if ( prodData != null ) {
-      mensaje = prodData;
-    }
+ 
     return Scaffold(
          appBar: AppBar(
-        title: Text('Usuarios que dieron me gusta')),
-        body:(mensaje.meGustas.users!=null)?ListView(
-              children: mensaje.meGustas.users.map( (user) {
+        title: Text('Usuarios que sigo')),
+        body:ListView(
+              children: utils.seguidos.map( (user) {
                   return ListTile(
                     leading:CircleAvatar(
                       radius: 22.0,
@@ -41,17 +35,25 @@ class UsuariosMeGustaPage extends StatelessWidget {
                       user.id!=userApp().id?
                     Navigator.push(
               context,
-                      MaterialPageRoute(builder:(context)=>PerfilUsuarioPage(usuario:user))):(){};
+                      MaterialPageRoute(builder:(context)=>PerfilUsuarioPage(usuario:user))).then((value){_handleRefresh();}):(){};
                     },
                   );
               }).toList()
         )
 
-          :Container(child: Text('sin megustas'),)
+          
         );
     
   } 
 
+    Future<void> _handleRefresh()async {
+    final mensajes= Provider.mensajesBloc(context);
+    final  usuarios= Provider.conocidosBloc(context);
+    setState(() {
+    mensajes.destroid();
+    usuarios.destroid();
+    });
 
-  
+    return null;
   }
+}

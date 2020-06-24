@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/providers/usuario_provider.dart';
 import 'package:formvalidation/src/utils/utils.dart' as utils;
+import 'package:toast/toast.dart';
 
 class RegistroPage extends StatefulWidget {
 
@@ -60,22 +61,20 @@ class _RegistroPageState extends State<RegistroPage> {
             child: Column(
               children: <Widget>[
                 Text('Crear cuenta', style: TextStyle(fontSize: 20.0)),
-                SizedBox( height: 60.0 ),
-                
+                SizedBox(height:60.0),
                 _crearUsername(),
                 SizedBox( height: 30.0 ),
                 _crearEmail( bloc ),
                 SizedBox( height: 30.0 ),
                 _crearPassword( bloc ),
                 SizedBox( height: 30.0 ),
-                
                 _crearBoton(bloc,_username)
               ],
             ),
           ),
 
           FlatButton(
-            child: Text('¿Ya tienes cuenta? Login'),
+            child: Text('¿Ya tienes cuenta? Inicia sesion!!',style: TextStyle(color:Colors.white),),
             onPressed: ()=> Navigator.pushReplacementNamed(context, 'login'),
           ),
           SizedBox( height: 100.0 )
@@ -176,7 +175,8 @@ class _RegistroPageState extends State<RegistroPage> {
     final info = await usuarioProvider.nuevoUsuario(bloc.email,_username,bloc.password);
 
     if ( info['ok'] ) {
-       Navigator.pushReplacementNamed(context, 'home');
+       Navigator.pushReplacementNamed(context, 'login');
+       Toast.show("Usuario Creado registrate!!", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
     } else {
       utils.mostrarAlerta( context, info['mensaje'] );
     }
